@@ -7,6 +7,10 @@ Welcome to the **AMAN** project! This is a software designed for a startup named
 This software is built to work with a specific machine and ensures the safe handling and storage of items.
 
 > **Note**: This project is still in development and not finished yet. Stay tuned for updates and progress as the system is refined and completed!
+
+![Screenshot of App](image_1.png)
+![Screenshot of App](image_2.png)
+
 ---
 
 ## Requirements
