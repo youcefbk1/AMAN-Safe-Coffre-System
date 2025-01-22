@@ -115,6 +115,21 @@ class LanguageInterface:
         self.label2.pack(expand=YES)
         self.frm3.pack(fill=X, side=BOTTOM)
 
+
+    def switch_to_page3fr(self):
+        self.frm1.pack_forget()
+        self.frm2.pack_forget()
+        self.frm3.pack_forget()
+        # Create an instance of LanguageInterface from page2.py
+        Page3FR(self.master, self, self.cursor, self.conn)
+
+    def switch_to_page3ar(self):
+        self.frm1.pack_forget()
+        self.frm2.pack_forget()
+        self.frm3.pack_forget()
+        # Create an instance of LanguageInterface from page2.py
+        Page3AR(self.master, self, self.cursor, self.conn)
+ 
     def return_to_main(self):
         self.frm1.pack_forget()
         self.frm2.pack_forget()
@@ -122,20 +137,6 @@ class LanguageInterface:
         # Hide the language interface
         # Show the main interface
         self.main_app.switch_to_main_interface()
-
-    def switch_to_page3fr(self):
-        self.frm1.pack_forget()
-        self.frm2.pack_forget()
-        self.frm3.pack_forget()
-        # Create an instance of LanguageInterface from page2.py
-        page3fr = Page3FR(self.master, self, self.cursor, self.conn)
-
-    def switch_to_page3ar(self):
-        self.frm1.pack_forget()
-        self.frm2.pack_forget()
-        self.frm3.pack_forget()
-        # Create an instance of LanguageInterface from page2.py
-        page3ar = Page3AR(self.master, self, self.cursor, self.conn)
 
     def switch_to_main_interface(self):
         self.frm1.pack_forget()

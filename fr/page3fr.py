@@ -37,7 +37,8 @@ class Page3FR:
         )
         self.label1.image = self.new_image_frm1
         self.label1.pack(expand=YES)
-
+        
+        # Central part (content)
         self.frm2 = Frame(self.master, bg="#F2F7F9", height=360, width=800)
 
         label_msg = Label(
@@ -143,15 +144,7 @@ class Page3FR:
         self.frm2.pack_forget()
         self.frm3.pack_forget()
         # Create an instance of LanguageInterface from page2.py
-        page4fr = Page4FR(self.master, self, self.cursor, self.conn)
-
-    def return_to_main(self):
-        self.frm1.pack_forget()
-        self.frm2.pack_forget()
-        self.frm3.pack_forget()
-        # Hide the language interface
-        # Show the main interface
-        self.main_app.switch_to_main_interface()
+        Page4FR(self.master, self, self.cursor, self.conn)
 
     def generate_password(self):
         # Generate a random password of 6 digits
@@ -184,6 +177,14 @@ class Page3FR:
         self.save_to_database()
         # Switch to page4fr
         self.switch_to_page4fr()
+
+    def return_to_main(self):
+        self.frm1.pack_forget()
+        self.frm2.pack_forget()
+        self.frm3.pack_forget()
+        # Hide the language interface
+        # Show the main interface
+        self.main_app.switch_to_main_interface()
 
     def switch_to_main_interface(self):
         self.frm1.pack_forget()

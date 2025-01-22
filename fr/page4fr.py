@@ -3,6 +3,8 @@ from customtkinter import *
 from PIL import Image, ImageTk
 from datetime import datetime
 import locale
+from fr.depot.page5fr import Page5fr
+from fr.retrait.page9fr import Page9fr
 
 
 class Page4FR:
@@ -51,8 +53,8 @@ class Page4FR:
         label_msg.place(x=60, y=10)
 
         # Buttons
-        btn1 = CTkButton(
-            master=self.frm2,
+        self.btn1 = CTkButton(
+            self.frm2,
             text="Dépôt",
             font=("Arial", 27),
             fg_color="#1679EF",
@@ -61,10 +63,11 @@ class Page4FR:
             height=50,
             border_width=0,
             corner_radius=4,
+            command=self.switch_to_page5fr,
         )
-        btn1.place(x=385, y=130)
+        self.btn1.place(x=385, y=130)
 
-        btn2 = CTkButton(
+        self.btn2 = CTkButton(
             master=self.frm2,
             text="Retrait",
             font=("Arial", 27),
@@ -74,8 +77,9 @@ class Page4FR:
             height=50,
             border_width=0,
             corner_radius=4,
+            command=self.switch_to_page9fr,
         )
-        btn2.place(x=385, y=230)
+        self.btn2.place(x=385, y=230)
 
         # Arrow images
         image_flch = Image.open("image/fleche3.png")
@@ -89,7 +93,7 @@ class Page4FR:
         label_flch2.place(x=735, y=123)
 
         # Exit button
-        btn_srt = CTkButton(
+        self.btn_srt = CTkButton(
             master=self.frm2,
             text="Sortie",
             font=("Arial", 20),
@@ -101,7 +105,7 @@ class Page4FR:
             corner_radius=3,
             command=self.return_to_main,
         )
-        btn_srt.place(x=40, y=320)
+        self.btn_srt.place(x=40, y=320)
 
         # Arrow image for exit button
         rotated_img = image_flch.rotate(180)
@@ -124,10 +128,31 @@ class Page4FR:
             bg="#1679EF",
         )
         label2.pack(expand=YES)
-
         self.frm3.pack(fill=X, side=BOTTOM)
 
+    def switch_to_page5fr(self):
+        self.frm1.pack_forget()
+        self.frm2.pack_forget()
+        self.frm3.pack_forget()
+        # Create an instance of LanguageInterface from page2.py
+        Page5fr(self.master, self, self.cursor, self.conn)
+        
+    def switch_to_page9fr(self):
+        self.frm1.pack_forget()
+        self.frm2.pack_forget()
+        self.frm3.pack_forget()
+        # Create an instance of LanguageInterface from page2.py
+        Page9fr(self.master, self, self.cursor, self.conn)
+
     def return_to_main(self):
+        self.frm1.pack_forget()
+        self.frm2.pack_forget()
+        self.frm3.pack_forget()
+        # Hide the language interface
+        # Show the main interface
+        self.main_app.switch_to_main_interface()
+
+    def switch_to_main_interface(self):
         self.frm1.pack_forget()
         self.frm2.pack_forget()
         self.frm3.pack_forget()

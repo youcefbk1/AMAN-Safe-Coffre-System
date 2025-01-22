@@ -116,7 +116,7 @@ class MainApplication:
         self.frm2.pack_forget()
         self.frm3.pack_forget()
         # Create an instance of LanguageInterface from page2.py
-        language_interface = LanguageInterface(self.master, self, self.cursor, self.conn)
+        LanguageInterface(self.master, self, self.cursor, self.conn)
 
     def switch_to_main_interface(self):
         # Show the main interface again
