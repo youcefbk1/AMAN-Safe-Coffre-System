@@ -3,7 +3,7 @@ from customtkinter import *
 from PIL import Image, ImageTk
 from datetime import datetime
 import locale
-from fr.depot.page5fr import Page5fr
+from fr.depot.page5fr import Page5FR
 from fr.retrait.page9fr import Page9fr
 
 
@@ -135,7 +135,7 @@ class Page4FR:
         self.frm2.pack_forget()
         self.frm3.pack_forget()
         # Create an instance of LanguageInterface from page2.py
-        Page5fr(self.master, self, self.cursor, self.conn)
+        Page5FR(self.master, self, self.cursor, self.conn)
         
     def switch_to_page9fr(self):
         self.frm1.pack_forget()
