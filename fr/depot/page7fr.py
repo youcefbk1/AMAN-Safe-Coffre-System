@@ -6,14 +6,48 @@ import locale
 
 
 class Page7FR:
-
     def __init__(self, master, main_app, cursor, conn):
         self.master = master
         self.main_app = main_app
         self.cursor = cursor
         self.conn = conn
         self.casier_id = None  # Initialisez avec un ID de casier par défaut
+        self.price = (
+            self.get_active_user_price()
+        )  # Récupérer le prix de l'utilisateur actif
+        self.signal_received = False  # Flag pour le signal
         self.setup_gui()
+        self.wait_for_signal()  # Lance la méthode pour attendre un signal
+
+    def wait_for_signal(self):
+        """
+        Méthode qui attend un signal du monnayeur.
+        Si le signal est reçu, bascule vers l'interface suivante.
+        """
+        # Simulation : Si un signal est reçu (à remplacer par votre logique réelle)
+        # Exemple : Lecture d'une valeur GPIO ou un autre mécanisme
+        if self.signal_received:
+            print("Signal reçu, basculement vers l'interface suivante.")
+            self.switch_to_main_interface()
+        else:
+            # Réessaye après 500 ms (0.5 seconde)
+            self.master.after(500, self.wait_for_signal)
+
+    def get_active_user_price(self):
+        """
+        Récupère le prix pour l'utilisateur actif depuis la table 'person'.
+        """
+        try:
+            self.cursor.execute("SELECT price FROM person WHERE actif = ?", (1,))
+            result = self.cursor.fetchone()
+            if result:
+                return result[0]  # Retourne le prix
+            else:
+                print("Aucun utilisateur actif trouvé.")
+                return 0  # Valeur par défaut si aucun utilisateur actif
+        except Exception as e:
+            print(f"Erreur lors de la récupération du prix : {e}")
+            return 0  # Valeur par défaut en cas d'erreur
 
     def setup_gui(self):
         # Met la localisation suivant la France permet d'avoir la langue française pour la date
@@ -100,10 +134,10 @@ class Page7FR:
         )
         label_msg.grid(row=0, column=0, pady=30)
 
-        # case prix
-        label_msg = CTkLabel(
+        # Dynamically set the price for the active user
+        label_price = CTkLabel(
             master=self.frm_msg,
-            text="400 DA",
+            text=f"{self.price} DA",  # Display the fetched price
             font=("Arial", 40),
             fg_color="#1679EF",
             text_color="#F2F7F9",
@@ -111,7 +145,7 @@ class Page7FR:
             height=70,
             width=200,
         )
-        label_msg.grid(row=1, column=0)
+        label_price.grid(row=1, column=0)
 
         # image fleche
         img_flch = Image.open("fr/image/flech_bas.png")
@@ -135,7 +169,7 @@ class Page7FR:
             height=30,
             border_width=0,
             corner_radius=3,
-            command= self.return_to_main,
+            command=self.return_to_main,
         )
         btn_srt.place(x=40, y=320)
 
@@ -164,7 +198,6 @@ class Page7FR:
         self.frm2.pack_forget()
         self.frm3.pack_forget()
         self.frm_box.place_forget()
-
         self.main_app.switch_to_main_interface()
 
     def switch_to_main_interface(self):
@@ -172,9 +205,6 @@ class Page7FR:
         self.frm2.pack_forget()
         self.frm3.pack_forget()
         self.frm_box.place_forget()
-
-        # Hide the language interface
-        # Show the main interface
         self.main_app.switch_to_main_interface()
 
 
