@@ -3,6 +3,7 @@ from customtkinter import *
 from PIL import Image, ImageTk
 from datetime import datetime
 import locale
+from fr.depot.page7fr import Page7FR
 
 
 class Page6FR:
@@ -62,7 +63,7 @@ class Page6FR:
         ):
             btn = CTkButton(
                 master=self.frm2,
-                text = "Sortie" if i == 7 else f"Bouton {i+1}",
+                text="Sortie" if i == 7 else f"Bouton {i+1}",
                 font=("Arial", 26),
                 fg_color="#1679EF",
                 text_color="#F2F7F9",
@@ -71,7 +72,7 @@ class Page6FR:
                 border_width=0,
                 corner_radius=4,
                 command=(
-                    self.return_to_main if i == 7 else None
+                    self.return_to_main if i == 7 else self.switch_to_page7fr
                 ),  # Par exemple, "Sortie" pour le dernier bouton
             )
             btn.place(x=x, y=y)
@@ -85,14 +86,14 @@ class Page6FR:
         self.label_flch1 = Label(self.frm2, image=self.img_flch, bg="#F2F7F9")
         self.label_flch1.place(x=750, y=63)
 
-        label_flch2 = Label(self.frm2, image=self.img_flch, bg="#F2F7F9")
-        label_flch2.place(x=750, y=144)
+        self.label_flch2 = Label(self.frm2, image=self.img_flch, bg="#F2F7F9")
+        self.label_flch2.place(x=750, y=144)
 
-        label_flch3 = Label(self.frm2, image=self.img_flch, bg="#F2F7F9")
-        label_flch3.place(x=750, y=224)
+        self.label_flch3 = Label(self.frm2, image=self.img_flch, bg="#F2F7F9")
+        self.label_flch3.place(x=750, y=224)
 
-        label_flch4 = Label(self.frm2, image=self.img_flch, bg="#F2F7F9")
-        label_flch4.place(x=750, y=305)
+        self.label_flch4 = Label(self.frm2, image=self.img_flch, bg="#F2F7F9")
+        self.label_flch4.place(x=750, y=305)
 
         # rotated image
         image_old = Image.open("image/fleche10.png")
@@ -100,18 +101,17 @@ class Page6FR:
         self.image_final = ImageTk.PhotoImage(image_rota)
 
         # partie fleche gauche
-        label_flch5 = Label(self.frm2, image=self.image_final, bg="#F2F7F9")
-        label_flch5.place(x=9, y=63)
+        self.label_flch5 = Label(self.frm2, image=self.image_final, bg="#F2F7F9")
+        self.label_flch5.place(x=9, y=63)
 
-        label_flch6 = Label(self.frm2, image=self.image_final, bg="#F2F7F9")
-        label_flch6.place(x=9, y=144)
+        self.label_flch6 = Label(self.frm2, image=self.image_final, bg="#F2F7F9")
+        self.label_flch6.place(x=9, y=144)
 
-        label_flch7 = Label(self.frm2, image=self.image_final, bg="#F2F7F9")
-        label_flch7.place(x=9, y=224)
+        self.label_flch7 = Label(self.frm2, image=self.image_final, bg="#F2F7F9")
+        self.label_flch7.place(x=9, y=224)
 
-        label_flch8 = Label(self.frm2, image=self.image_final, bg="#F2F7F9")
-        label_flch8.place(x=9, y=305)
-
+        self.label_flch8 = Label(self.frm2, image=self.image_final, bg="#F2F7F9")
+        self.label_flch8.place(x=9, y=305)
 
         # Charger les prix basés sur le casier
         self.load_prices()
@@ -131,12 +131,19 @@ class Page6FR:
         label2.pack(expand=YES)
         self.frm3.pack(fill=X, side=BOTTOM)
 
+    def switch_to_page7fr(self):
+        # Change vers la page suivante
+        self.frm1.pack_forget()
+        self.frm2.pack_forget()
+        self.frm3.pack_forget()
+        Page7FR(self.master, self, self.cursor, self.conn)
+
     def load_prices(self):
         try:
             # Obtenir l'ID du casier pour l'utilisateur actif
             self.cursor.execute(
                 "SELECT casier FROM person WHERE actif = ?", (1,)
-            )  # Remplacez 1 par l'ID actuel
+            )  
             casier_id = self.cursor.fetchone()[0]
 
             # Récupérer les prix depuis la table "casier" pour ce casier
@@ -159,10 +166,16 @@ class Page6FR:
         self.frm3.pack_forget()
         self.main_app.switch_to_main_interface()
 
+    def switch_to_main_interface(self):
+        self.frm1.pack_forget()
+        self.frm2.pack_forget()
+        self.frm3.pack_forget()
+        # Hide the language interface
+        # Show the main interface
+        self.main_app.switch_to_main_interface()
+
 
 if __name__ == "__main__":
     root = Tk()
-    app = Page6FR(
-        root, None, None, None
-    )  # Passer vos objets main_app, cursor et conn ici
+    app = Page6FR()  # Passer vos objets main_app, cursor et conn ici
     root.mainloop()

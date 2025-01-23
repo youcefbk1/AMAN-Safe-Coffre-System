@@ -42,6 +42,8 @@ class MainApplication:
                         password INTEGER,
                         casier INTEGER,
                         actif BOOLEAN DEFAULT 0,
+                        price INTEGER,
+                        time INTEGER,
                         FOREIGN KEY (casier) REFERENCES casier(id)
                     )"""
         )
