@@ -41,6 +41,7 @@ class MainApplication:
                         username INTEGER,
                         password INTEGER,
                         casier INTEGER,
+                        actif BOOLEAN DEFAULT 0,
                         FOREIGN KEY (casier) REFERENCES casier(id)
                     )"""
         )

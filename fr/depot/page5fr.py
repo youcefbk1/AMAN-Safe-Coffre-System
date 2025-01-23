@@ -3,6 +3,7 @@ from customtkinter import *
 from PIL import Image, ImageTk
 from datetime import datetime
 import locale
+from fr.depot.page6fr import Page6FR
 
 
 class Page5FR:
@@ -36,8 +37,7 @@ class Page5FR:
         self.new_image_frm1 = ImageTk.PhotoImage(
             resized_frm1
         )  # image  final    ---------- si tu veux faire des modifs cest cette Var que tu va utiliser
-        
-        
+
         self.label1 = Label(
             self.frm1, image=self.new_image_frm1, highlightthickness=0, bd=0
         )  # afficher l'image(image rahi f label)
@@ -73,6 +73,7 @@ class Page5FR:
             height=50,
             border_width=0,
             corner_radius=4,
+            command=lambda: self.switch_to_page6fr("A"),
         )
         btn1.place(x=485, y=50)
 
@@ -86,6 +87,7 @@ class Page5FR:
             height=50,
             border_width=0,
             corner_radius=4,
+            command=lambda: self.switch_to_page6fr("B"),
         )
         btn2.place(x=485, y=150)
 
@@ -99,25 +101,29 @@ class Page5FR:
             height=50,
             border_width=0,
             corner_radius=4,
+            command=lambda: self.switch_to_page6fr("C"),
         )
         btn3.place(x=485, y=250)
 
         # partie fleche
 
         image_flch1 = Image.open("image/fleche3.png")
-        img_flch1 = ImageTk.PhotoImage(image_flch1)
-        label_flch1 = Label(self.frm2, image=img_flch1, bg="#F2F7F9")
-        label_flch1.place(x=735, y=43)
+        self.img_flch1 = ImageTk.PhotoImage(image_flch1)
+        self.label_flch1 = Label(self.frm2, image=self.img_flch1, bg="#F2F7F9")
+        self.label_flch1.image = self.img_flch1
+        self.label_flch1.place(x=735, y=43)
 
         image_flch2 = Image.open("image/fleche3.png")
-        img_flch2 = ImageTk.PhotoImage(image_flch2)
-        label_flch2 = Label(self.frm2, image=img_flch2, bg="#F2F7F9")
-        label_flch2.place(x=735, y=243)
+        self.img_flch2 = ImageTk.PhotoImage(image_flch2)
+        self.label_flch2 = Label(self.frm2, image=self.img_flch2, bg="#F2F7F9")
+        self.label_flch2.image = self.img_flch2
+        self.label_flch2.place(x=735, y=243)
 
         image_flch3 = Image.open("image/fleche3.png")
-        img_flch3 = ImageTk.PhotoImage(image_flch3)
-        label_flch3 = Label(self.frm2, image=img_flch3, bg="#F2F7F9")
-        label_flch3.place(x=735, y=143)
+        self.img_flch3 = ImageTk.PhotoImage(image_flch3)
+        self.label_flch3 = Label(self.frm2, image=self.img_flch3, bg="#F2F7F9")
+        self.label_flch3.image = self.img_flch3
+        self.label_flch3.place(x=735, y=143)
 
         btn_srt = CTkButton(
             master=self.frm2,
@@ -129,15 +135,17 @@ class Page5FR:
             height=30,
             border_width=0,
             corner_radius=3,
+            command=self.return_to_main,
         )
         btn_srt.place(x=40, y=320)
 
         image_flch_srt = Image.open("image/fleche3.png")
         rotated_img = image_flch_srt.rotate(180)
         resize = rotated_img.resize((35, 35), Image.LANCZOS)
-        img_flch_srt = ImageTk.PhotoImage(resize)
-        label_flch_srt = Label(self.frm2, image=img_flch_srt, bg="#F2F7F9")
-        label_flch_srt.place(x=1, y=316)
+        self.img_flch_srt = ImageTk.PhotoImage(resize)
+        self.label_flch_srt = Label(self.frm2, image=self.img_flch_srt, bg="#F2F7F9")
+        self.label_flch_srt.image = self.img_flch_srt
+        self.label_flch_srt.place(x=1, y=316)
 
         self.frm2.pack()
 
@@ -152,6 +160,51 @@ class Page5FR:
         )
         label2.pack(expand=YES)
         self.frm3.pack(fill=X, side=BOTTOM)
+
+    def switch_to_page6fr(self,volume):
+        casier_value = 0
+        if volume == "A":
+            casier_value = 1
+        elif volume == "B":
+            casier_value = 2
+        elif volume == "C":
+            casier_value = 3
+
+        try:
+            # Met à jour la table `user` pour définir le casier
+            self.cursor.execute("SELECT id FROM person WHERE actif = 1")
+            utilisateur_actif = self.cursor.fetchone()
+            utilisateur_id = utilisateur_actif[0]
+            self.cursor.execute(
+                "UPDATE person SET casier = ? WHERE id = ?",
+                (casier_value, utilisateur_id),
+            )  # Remplacez 1 par l'ID utilisateur actuel
+            self.conn.commit()
+            print(f"Casier mis à jour à {casier_value} pour l'utilisateur.")
+        except Exception as e:
+            print(f"Erreur lors de la mise à jour du casier : {e}")
+
+        # Change vers la page suivante
+        self.frm1.pack_forget()
+        self.frm2.pack_forget()
+        self.frm3.pack_forget()
+        Page6FR(self.master, self, self.cursor, self.conn)
+
+    def return_to_main(self):
+        self.frm1.pack_forget()
+        self.frm2.pack_forget()
+        self.frm3.pack_forget()
+        # Hide the language interface
+        # Show the main interface
+        self.main_app.switch_to_main_interface()
+
+    def switch_to_main_interface(self):
+        self.frm1.pack_forget()
+        self.frm2.pack_forget()
+        self.frm3.pack_forget()
+        # Hide the language interface
+        # Show the main interface
+        self.main_app.switch_to_main_interface()
 
 
 if __name__ == "__main__":

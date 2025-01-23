@@ -4,7 +4,7 @@ from PIL import Image, ImageTk
 from datetime import datetime
 import locale
 from fr.depot.page5fr import Page5FR
-from fr.retrait.page9fr import Page9fr
+from fr.retrait.page9fr import Page9FR
 
 
 class Page4FR:
@@ -142,7 +142,7 @@ class Page4FR:
         self.frm2.pack_forget()
         self.frm3.pack_forget()
         # Create an instance of LanguageInterface from page2.py
-        Page9fr(self.master, self, self.cursor, self.conn)
+        Page9FR(self.master, self, self.cursor, self.conn)
 
     def return_to_main(self):
         self.frm1.pack_forget()

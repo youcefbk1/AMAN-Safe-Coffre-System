@@ -37,7 +37,7 @@ class Page3FR:
         )
         self.label1.image = self.new_image_frm1
         self.label1.pack(expand=YES)
-        
+
         # Central part (content)
         self.frm2 = Frame(self.master, bg="#F2F7F9", height=360, width=800)
 
@@ -156,10 +156,16 @@ class Page3FR:
         # Generate a password
         password = self.generate_password()
 
-        # Execute SQL command to insert data into the person table
+        # Set all users to inactive first
+        self.cursor.execute("UPDATE person SET actif = 0")
+
+        # Insert the new user and set them as active
         self.cursor.execute(
-            """INSERT INTO person (username, password) VALUES (?, ?)""",
-            (entry_text, password),
+            """
+            INSERT INTO person (username, password, actif)
+            VALUES (?, ?, ?)
+            """,
+            (entry_text, password, 1),  # Actif = 1 pour ce nouvel utilisateur
         )
         self.conn.commit()
 
