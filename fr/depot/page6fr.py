@@ -47,7 +47,7 @@ class Page6FR:
         )
         label_msg.place(x=95, y=3)
 
-        # Boutons pour afficher les prix (placeholders pour l'instant)
+        # Boutons pour afficher les prix
         self.btns = []
         for i, (x, y) in enumerate(
             [
@@ -72,8 +72,12 @@ class Page6FR:
                 border_width=0,
                 corner_radius=4,
                 command=(
-                    self.return_to_main if i == 7 else self.switch_to_page7fr
-                ),  # Par exemple, "Sortie" pour le dernier bouton
+                    self.return_to_main
+                    if i == 7
+                    else lambda duration_price=(None, None): self.save_choice(
+                        duration_price
+                    )
+                ),  # Placeholder pour l'instant
             )
             btn.place(x=x, y=y)
             self.btns.append(btn)
@@ -131,14 +135,10 @@ class Page6FR:
         label2.pack(expand=YES)
         self.frm3.pack(fill=X, side=BOTTOM)
 
-
-
     def load_prices(self):
         try:
             # Obtenir l'ID du casier pour l'utilisateur actif
-            self.cursor.execute(
-                "SELECT casier FROM person WHERE actif = ?", (1,)
-            )  
+            self.cursor.execute("SELECT casier FROM person WHERE actif = ?", (1,))
             casier_id = self.cursor.fetchone()[0]
 
             # Récupérer les prix depuis la table "casier" pour ce casier
@@ -149,13 +149,34 @@ class Page6FR:
                 durations = ["1h", "2h", "3h", "4h", "12h", "24h", "48h"]
                 prices = casier_data[2:]  # Ignorer les colonnes ID et Volume
                 for i, (duration, price) in enumerate(zip(durations, prices)):
-                    self.btns[i].configure(text=f"{duration} / {price} DA")
+                    # Configurer le texte et la commande des boutons
+                    self.btns[i].configure(
+                        text=f"{duration} / {price} DA",
+                        command=lambda d=duration, p=price: self.save_choice(d, p),
+                    )
             else:
                 print("Aucun casier trouvé pour cet ID.")
         except Exception as e:
             print(f"Erreur lors du chargement des prix : {e}")
-            
-            
+
+    def save_choice(self, duration, price):
+        """
+        Enregistre le temps et le prix choisis pour l'utilisateur actif.
+        """
+        try:
+            # Convertir le temps (e.g., "24h") en entier
+            time_int = int(duration.replace("h", ""))
+            # Mettre à jour la table `person` pour l'utilisateur actif
+            self.cursor.execute(
+                "UPDATE person SET time = ?, price = ? WHERE actif = ?",
+                (time_int, price, 1),
+            )
+            self.conn.commit()  # Valider les changements
+            print(f"Temps {duration} et prix {price} enregistrés avec succès.")
+            self.switch_to_page7fr()
+        except Exception as e:
+            print(f"Erreur lors de l'enregistrement du choix : {e}")
+
     def switch_to_page7fr(self):
         # Change vers la page suivante
         self.frm1.pack_forget()
@@ -173,8 +194,6 @@ class Page6FR:
         self.frm1.pack_forget()
         self.frm2.pack_forget()
         self.frm3.pack_forget()
-        # Hide the language interface
-        # Show the main interface
         self.main_app.switch_to_main_interface()
 
 
