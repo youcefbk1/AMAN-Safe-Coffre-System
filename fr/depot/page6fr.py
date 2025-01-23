@@ -131,12 +131,7 @@ class Page6FR:
         label2.pack(expand=YES)
         self.frm3.pack(fill=X, side=BOTTOM)
 
-    def switch_to_page7fr(self):
-        # Change vers la page suivante
-        self.frm1.pack_forget()
-        self.frm2.pack_forget()
-        self.frm3.pack_forget()
-        Page7FR(self.master, self, self.cursor, self.conn)
+
 
     def load_prices(self):
         try:
@@ -159,6 +154,14 @@ class Page6FR:
                 print("Aucun casier trouvé pour cet ID.")
         except Exception as e:
             print(f"Erreur lors du chargement des prix : {e}")
+            
+            
+    def switch_to_page7fr(self):
+        # Change vers la page suivante
+        self.frm1.pack_forget()
+        self.frm2.pack_forget()
+        self.frm3.pack_forget()
+        Page7FR(self.master, self, self.cursor, self.conn)
 
     def return_to_main(self):
         self.frm1.pack_forget()
