@@ -3,6 +3,7 @@ from customtkinter import *
 from PIL import Image, ImageTk
 from datetime import datetime
 import locale
+import serial
 
 
 class Page7FR:
@@ -16,22 +17,56 @@ class Page7FR:
             self.get_active_user_price()
         )  # Récupérer le prix de l'utilisateur actif
         self.signal_received = False  # Flag pour le signal
+
+        # Initialisation de la communication UART
+        self.uart = serial.Serial(
+            port="COM3",  # Remplacez par le port COM approprié sur Windows
+            baudrate=9600,  # Baud rate (doit correspondre à celui du Raspberry Pi)
+            parity=serial.PARITY_NONE,
+            stopbits=serial.STOPBITS_ONE,
+            bytesize=serial.EIGHTBITS,
+            timeout=1,
+        )
+
         self.setup_gui()
-        self.wait_for_signal()  # Lance la méthode pour attendre un signal
+        self.send_price_to_raspberry()  # Envoyer le prix au Raspberry Pi
+        self.wait_for_signal()  # Start waiting for the "done" signal
 
     def wait_for_signal(self):
         """
-        Méthode qui attend un signal du monnayeur.
-        Si le signal est reçu, bascule vers l'interface suivante.
+        Waits for the "done" signal from the Raspberry Pi via UART.
         """
-        # Simulation : Si un signal est reçu (à remplacer par votre logique réelle)
-        # Exemple : Lecture d'une valeur GPIO ou un autre mécanisme
-        if self.signal_received:
-            print("Signal reçu, basculement vers l'interface suivante.")
-            self.switch_to_main_interface()
-        else:
-            # Réessaye après 500 ms (0.5 seconde)
+        try:
+            if self.uart.is_open:
+                # Check for incoming data
+                data = self.uart.readline().decode("utf-8").strip()
+                if data == "done":
+                    print("Signal received: Payment successful.")
+                    # self.switch_to_next_interface()
+                else:
+                    # Retry after 500ms
+                    self.master.after(500, self.wait_for_signal)
+            else:
+                print("UART connection is not open.")
+                self.master.after(500, self.wait_for_signal)
+        except Exception as e:
+            print(f"Error waiting for signal: {e}")
             self.master.after(500, self.wait_for_signal)
+
+    def send_price_to_raspberry(self):
+        """
+        Envoie le prix final au Raspberry Pi via UART.
+        """
+        try:
+            if self.uart.is_open:
+                # Convertir le prix en chaîne de caractères et l'envoyer
+                price_str = str(self.price)
+                self.uart.write(price_str.encode("utf-8"))
+                print(f"Prix envoyé au Raspberry Pi : {price_str}")
+            else:
+                print("La connexion UART n'est pas ouverte.")
+        except Exception as e:
+            print(f"Erreur lors de l'envoi du prix : {e}")
 
     def get_active_user_price(self):
         """
@@ -206,6 +241,11 @@ class Page7FR:
         self.frm3.pack_forget()
         self.frm_box.place_forget()
         self.main_app.switch_to_main_interface()
+
+    def __del__(self):
+        if hasattr(self, "uart") and self.uart.is_open:
+            self.uart.close()
+            print("Connexion UART fermée.")
 
 
 if __name__ == "__main__":
