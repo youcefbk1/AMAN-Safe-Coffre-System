@@ -2,6 +2,7 @@ from tkinter import *
 from customtkinter import *
 from PIL import Image, ImageTk
 from datetime import datetime
+from fr.depot.page8fr import Page8FR
 import locale
 import serial
 
@@ -12,16 +13,13 @@ class Page7FR:
         self.main_app = main_app
         self.cursor = cursor
         self.conn = conn
-        self.casier_id = None  # Initialisez avec un ID de casier par défaut
-        self.price = (
-            self.get_active_user_price()
-        )  # Récupérer le prix de l'utilisateur actif
-        self.signal_received = False  # Flag pour le signal
+        self.casier_id = None  # Initialize with a default locker ID
+        self.price = self.get_active_user_price()  # Fetch the active user's price
 
-        # Initialisation de la communication UART
+        # Initialize UART communication
         self.uart = serial.Serial(
-            port="COM3",  # Remplacez par le port COM approprié sur Windows
-            baudrate=9600,  # Baud rate (doit correspondre à celui du Raspberry Pi)
+            port="COM3",  # Replace with the correct COM port on Windows
+            baudrate=9600,  # Must match the Raspberry Pi's baud rate
             parity=serial.PARITY_NONE,
             stopbits=serial.STOPBITS_ONE,
             bytesize=serial.EIGHTBITS,
@@ -29,7 +27,7 @@ class Page7FR:
         )
 
         self.setup_gui()
-        self.send_price_to_raspberry()  # Envoyer le prix au Raspberry Pi
+        self.send_price_to_raspberry()  # Send the price to the Raspberry Pi
         self.wait_for_signal()  # Start waiting for the "done" signal
 
     def wait_for_signal(self):
@@ -42,7 +40,7 @@ class Page7FR:
                 data = self.uart.readline().decode("utf-8").strip()
                 if data == "done":
                     print("Signal received: Payment successful.")
-                    # self.switch_to_next_interface()
+                    self.switch_to_page8fr()
                 else:
                     # Retry after 500ms
                     self.master.after(500, self.wait_for_signal)
@@ -55,34 +53,33 @@ class Page7FR:
 
     def send_price_to_raspberry(self):
         """
-        Envoie le prix final au Raspberry Pi via UART.
+        Sends the final price to the Raspberry Pi via UART.
         """
         try:
             if self.uart.is_open:
-                # Convertir le prix en chaîne de caractères et l'envoyer
                 price_str = str(self.price)
                 self.uart.write(price_str.encode("utf-8"))
-                print(f"Prix envoyé au Raspberry Pi : {price_str}")
+                print(f"Price sent to Raspberry Pi: {price_str}")
             else:
-                print("La connexion UART n'est pas ouverte.")
+                print("UART connection is not open.")
         except Exception as e:
-            print(f"Erreur lors de l'envoi du prix : {e}")
+            print(f"Error sending price: {e}")
 
     def get_active_user_price(self):
         """
-        Récupère le prix pour l'utilisateur actif depuis la table 'person'.
+        Fetches the price for the active user from the 'person' table.
         """
         try:
             self.cursor.execute("SELECT price FROM person WHERE actif = ?", (1,))
             result = self.cursor.fetchone()
             if result:
-                return result[0]  # Retourne le prix
+                return result[0]  # Return the price
             else:
-                print("Aucun utilisateur actif trouvé.")
-                return 0  # Valeur par défaut si aucun utilisateur actif
+                print("No active user found.")
+                return 0  # Default value if no active user
         except Exception as e:
-            print(f"Erreur lors de la récupération du prix : {e}")
-            return 0  # Valeur par défaut en cas d'erreur
+            print(f"Error fetching price: {e}")
+            return 0  # Default value in case of error
 
     def setup_gui(self):
         # Met la localisation suivant la France permet d'avoir la langue française pour la date
@@ -227,6 +224,14 @@ class Page7FR:
         )
         label2.pack(expand=YES)
         self.frm3.pack(fill=X, side=BOTTOM)
+
+    def switch_to_page8fr(self):
+        # Change vers la page suivante
+        self.frm1.pack_forget()
+        self.frm2.pack_forget()
+        self.frm3.pack_forget()
+        self.master.update_idletasks()  # Ensure GUI refresh before switching
+        Page8FR(self.master, self, self.cursor, self.conn)
 
     def return_to_main(self):
         self.frm1.pack_forget()
