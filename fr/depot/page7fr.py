@@ -65,6 +65,7 @@ class Page7FR:
                 if data == "done":
                     print("Signal received: Payment successful.")
                     self.switch_to_page8fr()
+                    self.paid()  # Mark the user as paid in the database
                 else:
                     # Retry after 500ms
                     self.master.after(500, self.wait_for_signal)
@@ -74,6 +75,18 @@ class Page7FR:
         except Exception as e:
             print(f"Error waiting for signal: {e}")
             self.master.after(500, self.wait_for_signal)
+            
+    def paid(self):
+        """
+        Update the 'paid' column in the 'person' table to mark the user as paid.
+        """
+        try:
+            self.cursor.execute("UPDATE person SET paid = 1 WHERE actif = 1")
+            self.conn.commit()
+            print("User marked as paid.")
+        except Exception as e:
+            print(f"Error marking user as paid: {e}")
+            
 
     def send_data_to_raspberry(self):
         """

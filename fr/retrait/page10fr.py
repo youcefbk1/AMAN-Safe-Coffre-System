@@ -62,6 +62,7 @@ class Page10FR:
             height=60,
             width=200,
             corner_radius=4,
+            command=self.return_to_main,
         )
         bouton.pack(expand=YES, pady=10)
 
@@ -77,6 +78,23 @@ class Page10FR:
         label2.pack(expand=YES)
 
         self.frm3.pack(fill=X, side=BOTTOM)
+
+    def return_to_main(self):
+        if hasattr(self, "uart") and self.uart.is_open:
+            self.uart.close()
+            print("Connexion UART fermée.")
+        """
+        Resets the application without closing the window.
+        """
+        # Destroy all widgets inside the main window
+        for widget in self.master.winfo_children():
+            widget.destroy()
+
+        # Reimport and reinitialize the main application
+        from main import MainApplication  # Import your main application class
+
+        MainApplication(self.master)  # Restart the main interface
+
 
 if __name__ == "__main__":
     root = Tk()

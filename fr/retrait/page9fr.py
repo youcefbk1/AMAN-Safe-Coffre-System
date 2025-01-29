@@ -274,12 +274,25 @@ class Page9FR:
                 # Start Raspberry Pi script remotely via SSH
                 self.start_raspberry_script()
                 self.switch_to_page10fr()
+                self.delete_user()
             else:
                 self.lbl_error.configure(text="Mot de passe incorrect.")  # Affiche l'erreur en rouge sous le champ
 
         except Exception as e:
             self.lbl_error.configure(text="Erreur lors de la connexion.")  # Gère l'erreur SQL
 
+    def delete_user(self):
+        """
+        Supprime l'utilisateur actif de la base de données.
+        """
+        try:
+            self.cursor.execute("DELETE FROM person WHERE actif = 1")
+            self.conn.commit()
+            print("Utilisateur supprimé avec succès.")
+        except Exception as e:
+            print(f"Erreur lors de la suppression de l'utilisateur : {e}")
+            
+            
     def switch_to_page10fr(self):
         self.frm1.pack_forget()
         self.frm2.pack_forget()
@@ -294,10 +307,20 @@ class Page9FR:
         self.main_app.switch_to_main_interface()  # Changez cette ligne selon votre logique
 
     def return_to_main(self):
-        self.frm1.pack_forget()
-        self.frm2.pack_forget()
-        self.frm3.pack_forget()
-        self.main_app.switch_to_main_interface()
+        if hasattr(self, "uart") and self.uart.is_open:
+            self.uart.close()
+            print("Connexion UART fermée.")
+        """
+        Resets the application without closing the window.
+        """
+        # Destroy all widgets inside the main window
+        for widget in self.master.winfo_children():
+            widget.destroy()
+
+        # Reimport and reinitialize the main application
+        from main import MainApplication  # Import your main application class
+
+        MainApplication(self.master)  # Restart the main interface
 
 
 if __name__ == "__main__":

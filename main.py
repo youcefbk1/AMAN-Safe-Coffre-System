@@ -16,7 +16,6 @@ class MainApplication:
 
         self.setup_gui()
 
-
     def setup_gui(self):
         # Met la localisation suivant la France permet d'avoir la langue française pour la date
         locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
@@ -45,6 +44,7 @@ class MainApplication:
                         password INTEGER,
                         casier INTEGER,
                         actif BOOLEAN DEFAULT 0,
+                        paid BOOLEAN DEFAULT 0,
                         price INTEGER,
                         time INTEGER,
                         FOREIGN KEY (casier) REFERENCES casier(id)
