@@ -46,7 +46,7 @@ class Page10FR:
 
         lbl_msg = CTkLabel(
             master=self.frm2,
-            text="veuillez retirer vos bagages",
+            text="veuillez retirer vos bagages\n et fermer la porte\n Merci.",
             font=("Arial", 40, "bold"),
             text_color="#095CD3",
             fg_color="#F2F7F9",

@@ -15,7 +15,6 @@ class Page5FR:
         self.conn = conn  # Save the conn
         # Start Raspberry Pi script remotely via SSH
         self.start_raspberry_script()
-        # Initialize UART communication
 
         self.setup_gui()
 

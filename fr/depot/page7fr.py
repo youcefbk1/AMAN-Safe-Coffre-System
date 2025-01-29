@@ -5,7 +5,6 @@ from datetime import datetime
 from fr.depot.page8fr import Page8FR
 import locale
 import serial
-import paramiko
 
 
 class Page7FR:
@@ -265,6 +264,9 @@ class Page7FR:
         Page8FR(self.master, self, self.cursor, self.conn)
 
     def return_to_main(self):
+        if hasattr(self, "uart") and self.uart.is_open:
+            self.uart.close()
+            print("Connexion UART fermée.")
         """
         Resets the application without closing the window.
         """
