@@ -3,7 +3,8 @@ from customtkinter import *
 from PIL import Image, ImageTk
 from datetime import datetime
 import locale
-
+import os
+import sys
 
 class Page8FR:
 
@@ -12,18 +13,55 @@ class Page8FR:
         self.main_app = main_app
         self.cursor = cursor
         self.conn = conn
-        self.casier_id = None  # Initialisez avec un ID de casier par défaut
-        # self.price = (
-        #     self.get_active_user_price()
-        # )  # Récupérer le prix de l'utilisateur actif
+        self.casier_id = None  # Initialize with a default locker ID
+        self.user_data = self.get_active_user_data()  # Fetch active user data
 
         self.setup_gui()
 
+    def get_active_user_data(self):
+        """
+        Fetches active user data from the 'person' table.
+        """
+        try:
+            # Query to get the active user data
+            self.cursor.execute(
+                "SELECT username, password, casier, price FROM person WHERE actif = ?",
+                (1,),
+            )
+            result = self.cursor.fetchone()
+
+            if result:
+                username, password, casier_id, price = result
+                # Map casier ID to labels
+                casier_label = {1: "A", 2: "B", 3: "C"}.get(casier_id, "Unknown")
+                return {
+                    "username": username,
+                    "password": password,
+                    "casier": casier_label,
+                    "price": price,
+                }
+            else:
+                print("No active user found.")
+                return {
+                    "username": "N/A",
+                    "password": "N/A",
+                    "casier": "N/A",
+                    "price": "N/A",
+                }
+        except Exception as e:
+            print(f"Error fetching active user data: {e}")
+            return {
+                "username": "Error",
+                "password": "Error",
+                "casier": "Error",
+                "price": "Error",
+            }
+
     def setup_gui(self):
-        # Met la localisation suivant la France permet d'avoir la langue française pour la date
+        # Set French locale for date
         locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
 
-        # Partie initialisation de la fenêtre
+        # Initialize main window
         self.master.title("AMAN")
         self.master.iconbitmap("image/AMAN-LOGO.ico")
         self.master.geometry("800x480")
@@ -31,11 +69,11 @@ class Page8FR:
         self.master.maxsize(800, 480)
         self.master.config(bg="#F2F7F9")
 
-        # bande bleu  TOP
+        # Top blue banner
         self.frm1 = Frame(self.master, bg="#1679EF", height=50)
         self.frm1.pack(fill=X, side=TOP, pady=15)
 
-        # logo
+        # Logo
         old_image_frm1 = Image.open("image/AMAN-BLEU.png")
         resized_frm1 = old_image_frm1.resize((60, 50), Image.LANCZOS)
         self.new_image_frm1 = ImageTk.PhotoImage(resized_frm1)
@@ -45,10 +83,10 @@ class Page8FR:
         self.label1.image = self.new_image_frm1
         self.label1.pack(expand=YES)
 
-        # Partie central (contenu)
-
+        # Central content
         self.frm2 = Frame(self.master, bg="#F2F7F9", height=360, width=800)
 
+        # Frame for ticket information
         frm_info = CTkButton(
             master=self.frm2,
             fg_color="#F2F7F9",
@@ -61,6 +99,7 @@ class Page8FR:
             text="",
         )
 
+        # Labels for ticket details
         label_ticket = CTkLabel(
             master=frm_info,
             text="N° Ticket :",
@@ -106,19 +145,19 @@ class Page8FR:
         )
         label_montant.grid(row=4, column=0, sticky="w", padx=40)
 
-        # la partie à remplire(que tu peux modifier)
-        label_date = CTkLabel(
+        # Display values from the active user data
+        label_ticket_value = CTkLabel(
             master=frm_info,
-            text="1111111111",
+            text="1111111111",  # Placeholder for ticket number
             font=("Arial", 17, "bold"),
             fg_color="#F2F7F9",
             text_color="#1679EF",
         )
-        label_date.grid(row=0, column=1, sticky="w")
+        label_ticket_value.grid(row=0, column=1, sticky="w")
 
         label1 = CTkLabel(
             master=frm_info,
-            text="user name",
+            text=self.user_data["username"],  # Username
             font=("Arial", 17, "bold"),
             fg_color="#F2F7F9",
             text_color="#1679EF",
@@ -127,7 +166,7 @@ class Page8FR:
 
         label2 = CTkLabel(
             master=frm_info,
-            text="password",
+            text=self.user_data["password"],  # Password
             font=("Arial", 17, "bold"),
             fg_color="#F2F7F9",
             text_color="#1679EF",
@@ -136,7 +175,7 @@ class Page8FR:
 
         label3 = CTkLabel(
             master=frm_info,
-            text="nb box",
+            text=self.user_data["casier"],  # Casier (e.g., A, B, C)
             font=("Arial", 17, "bold"),
             fg_color="#F2F7F9",
             text_color="#1679EF",
@@ -145,7 +184,7 @@ class Page8FR:
 
         label4 = CTkLabel(
             master=frm_info,
-            text="price",
+            text=f"{self.user_data['price']} DA",  # Price
             font=("Arial", 17, "bold"),
             fg_color="#F2F7F9",
             text_color="#1679EF",
@@ -175,6 +214,7 @@ class Page8FR:
             height=30,
             border_width=0,
             corner_radius=3,
+            command=self.return_to_main,
         )
         btn_srt.place(x=40, y=320)
 
@@ -199,22 +239,32 @@ class Page8FR:
 
         self.frm3.pack(fill=X, side=BOTTOM)
 
-    def return_to_main(self):
-        self.frm1.pack_forget()
-        self.frm2.pack_forget()
-        self.frm3.pack_forget()
-        self.frm_box.place_forget()
-        self.main_app.switch_to_main_interface()
+    # def return_to_main(self):
+    #     self.frm1.pack_forget()
+    #     self.frm2.pack_forget()
+    #     self.frm3.pack_forget()
+    #     self.main_app.switch_to_main_interface()
+    def __del__(self):
+        if hasattr(self, "uart") and self.uart.is_open:
+            self.uart.close()
+            print("Connexion UART fermée.")
 
-    def switch_to_main_interface(self):
-        self.frm1.pack_forget()
-        self.frm2.pack_forget()
-        self.frm3.pack_forget()
-        self.frm_box.place_forget()
-        self.main_app.switch_to_main_interface()
+    def return_to_main(self):
+
+        """
+        Resets the application without closing the window.
+        """
+        # Destroy all widgets inside the main window
+        for widget in self.master.winfo_children():
+            widget.destroy()
+
+        # Reimport and reinitialize the main application
+        from main import MainApplication  # Import your main application class
+
+        MainApplication(self.master)  # Restart the main interface
 
 
 if __name__ == "__main__":
     root = Tk()
-    app = Page8FR(root)
+    app = Page8FR(root, None, None, None)
     root.mainloop()

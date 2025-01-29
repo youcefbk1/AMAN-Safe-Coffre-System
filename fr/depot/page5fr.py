@@ -4,6 +4,7 @@ from PIL import Image, ImageTk
 from datetime import datetime
 import locale
 from fr.depot.page6fr import Page6FR
+import paramiko
 
 
 class Page5FR:
@@ -12,7 +13,35 @@ class Page5FR:
         self.main_app = main_app  # Save the MainApplication instance
         self.cursor = cursor  # Save the cursor
         self.conn = conn  # Save the conn
+        # Start Raspberry Pi script remotely via SSH
+        self.start_raspberry_script()
+        # Initialize UART communication
+
         self.setup_gui()
+
+    def start_raspberry_script(self):
+        """
+        Starts the Raspberry Pi script remotely using SSH.
+        """
+        try:
+            ssh = paramiko.SSHClient()
+            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+            # Connect to Raspberry Pi (Change IP, username, and password)
+            ssh.connect(hostname="raspberrypi.local", username="aman", password="aman")
+
+            # Kill any previous instance of the script
+            ssh.exec_command("pkill -f raspberry_script.py")
+
+            # Start the Raspberry Pi script in the background
+            ssh.exec_command(
+                "lxterminal -e 'python3 /home/aman/aman/raspberry_script.py'"
+            )
+            print("Raspberry Pi script started successfully.")
+            ssh.close()
+
+        except Exception as e:
+            print(f"Error starting Raspberry Pi script: {e}")
 
     def setup_gui(self):
         # Set French locale for date

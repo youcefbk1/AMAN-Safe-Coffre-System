@@ -6,6 +6,8 @@ import locale
 import random
 import string
 from fr.page4fr import Page4FR
+import os
+import sys
 
 
 class Page3FR:
@@ -184,13 +186,27 @@ class Page3FR:
         # Switch to page4fr
         self.switch_to_page4fr()
 
+    # def return_to_main(self):
+    #     self.frm1.pack_forget()
+    #     self.frm2.pack_forget()
+    #     self.frm3.pack_forget()
+    #     # Hide the language interface
+    #     # Show the main interface
+    #     self.main_app.switch_to_main_interface()
+
+
     def return_to_main(self):
-        self.frm1.pack_forget()
-        self.frm2.pack_forget()
-        self.frm3.pack_forget()
-        # Hide the language interface
-        # Show the main interface
-        self.main_app.switch_to_main_interface()
+        """
+        Resets the application without closing the window.
+        """
+        # Destroy all widgets inside the main window
+        for widget in self.master.winfo_children():
+            widget.destroy()
+
+        # Reimport and reinitialize the main application
+        from main import MainApplication  # Import your main application class
+
+        MainApplication(self.master)  # Restart the main interface
 
     def switch_to_main_interface(self):
         self.frm1.pack_forget()

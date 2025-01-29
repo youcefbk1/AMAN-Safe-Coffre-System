@@ -5,30 +5,57 @@ from datetime import datetime
 from fr.depot.page8fr import Page8FR
 import locale
 import serial
+import paramiko
 
 
 class Page7FR:
-    def __init__(self, master, main_app, cursor, conn):
+    def __init__(
+        self,
+        master,
+        main_app,
+        cursor,
+        conn,
+    ):
         self.master = master
         self.main_app = main_app
         self.cursor = cursor
         self.conn = conn
         self.casier_id = None  # Initialize with a default locker ID
         self.price = self.get_active_user_price()  # Fetch the active user's price
+        self.casier_num()  # Call the method to populate self.casier_id
 
-        # Initialize UART communication
-        self.uart = serial.Serial(
-            port="COM3",  # Replace with the correct COM port on Windows
-            baudrate=9600,  # Must match the Raspberry Pi's baud rate
-            parity=serial.PARITY_NONE,
-            stopbits=serial.STOPBITS_ONE,
-            bytesize=serial.EIGHTBITS,
-            timeout=1,
-        )
+
+        # Check if the UART connection is already open
+        if not hasattr(self, 'uart') or not self.uart.is_open:
+            self.uart = serial.Serial(
+                port="COM3",
+                baudrate=9600,
+                parity=serial.PARITY_NONE,
+                stopbits=serial.STOPBITS_ONE,
+                bytesize=serial.EIGHTBITS,
+                timeout=1,
+            )
+
 
         self.setup_gui()
-        self.send_price_to_raspberry()  # Send the price to the Raspberry Pi
+        self.send_data_to_raspberry()  # Send the price to the Raspberry Pi
         self.wait_for_signal()  # Start waiting for the "done" signal
+
+    def casier_num(self):
+        """
+        Fetches the casier ID for the active user from the 'person' table.
+        """
+        try:
+            # Query to fetch casier ID for the active user
+            self.cursor.execute("SELECT casier FROM person WHERE actif = ?", (1,))
+            result = self.cursor.fetchone()
+            if result:
+                self.casier_id = result[0]  # Store the casier_id
+                print(f"Fetched Casier ID: {self.casier_id}")
+            else:
+                print("No active user or casier ID found.")
+        except Exception as e:
+            print(f"Error fetching casier ID: {e}")
 
     def wait_for_signal(self):
         """
@@ -51,19 +78,22 @@ class Page7FR:
             print(f"Error waiting for signal: {e}")
             self.master.after(500, self.wait_for_signal)
 
-    def send_price_to_raspberry(self):
+    def send_data_to_raspberry(self):
         """
-        Sends the final price to the Raspberry Pi via UART.
+        Sends the price and casier_id to the Raspberry Pi via UART.
         """
         try:
             if self.uart.is_open:
-                price_str = str(self.price)
-                self.uart.write(price_str.encode("utf-8"))
-                print(f"Price sent to Raspberry Pi: {price_str}")
+                # Combine price and casier_id into a single string
+                data_to_send = (
+                    f"{self.price}:{self.casier_id}"  # Format: "price:casier_id"
+                )
+                self.uart.write(data_to_send.encode("utf-8"))
+                print(f"Data sent to Raspberry Pi: {data_to_send}")
             else:
                 print("UART connection is not open.")
         except Exception as e:
-            print(f"Error sending price: {e}")
+            print(f"Error sending data to Raspberry Pi: {e}")
 
     def get_active_user_price(self):
         """
@@ -227,6 +257,9 @@ class Page7FR:
 
     def switch_to_page8fr(self):
         # Change vers la page suivante
+        if hasattr(self, "uart") and self.uart.is_open:
+            self.uart.close()
+            print("Connexion UART fermée.")
         self.frm1.pack_forget()
         self.frm2.pack_forget()
         self.frm3.pack_forget()

@@ -6,13 +6,16 @@ import locale
 import sqlite3
 from page2 import LanguageInterface
 from fr.page3fr import Page3FR
+import paramiko
 
 
 class MainApplication:
 
     def __init__(self, master):
         self.master = master
+
         self.setup_gui()
+
 
     def setup_gui(self):
         # Met la localisation suivant la France permet d'avoir la langue française pour la date
@@ -132,4 +135,3 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = MainApplication(root)
     root.mainloop()
-
