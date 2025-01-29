@@ -158,18 +158,29 @@ class Page3FR:
         # Generate a password
         password = self.generate_password()
 
+        # Check if the username already exists
+        self.cursor.execute("SELECT id FROM person WHERE username = ?", (entry_text,))
+        existing_user = self.cursor.fetchone()
+
         # Set all users to inactive first
         self.cursor.execute("UPDATE person SET actif = 0")
 
-        # Insert the new user and set them as active
-        self.cursor.execute(
-            """
-            INSERT INTO person (username, password, actif)
-            VALUES (?, ?, ?)
-            """,
-            (entry_text, password, 1),  # Actif = 1 pour ce nouvel utilisateur
-        )
-        self.conn.commit()
+        if  existing_user: 
+            self.cursor.execute(
+                "UPDATE person SET actif = ? WHERE id = ?",
+                (1, existing_user[0]),
+            )  
+            self.conn.commit()
+        else :
+            # Insert the new user and set them as active
+            self.cursor.execute(
+                """
+                INSERT INTO person (username, password, actif)
+                VALUES (?, ?, ?)
+                """,
+                (entry_text, password, 1),  # Actif = 1 pour ce nouvel utilisateur
+            )
+            self.conn.commit()
 
     def save_and_switch(self):
         # Get the entry text
@@ -185,15 +196,6 @@ class Page3FR:
         self.save_to_database()
         # Switch to page4fr
         self.switch_to_page4fr()
-
-    # def return_to_main(self):
-    #     self.frm1.pack_forget()
-    #     self.frm2.pack_forget()
-    #     self.frm3.pack_forget()
-    #     # Hide the language interface
-    #     # Show the main interface
-    #     self.main_app.switch_to_main_interface()
-
 
     def return_to_main(self):
         """
