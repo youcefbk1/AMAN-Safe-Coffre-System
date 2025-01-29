@@ -185,10 +185,17 @@ class Page6FR:
         Page7FR(self.master, self, self.cursor, self.conn)
 
     def return_to_main(self):
-        self.frm1.pack_forget()
-        self.frm2.pack_forget()
-        self.frm3.pack_forget()
-        self.main_app.switch_to_main_interface()
+        """
+        Resets the application without closing the window.
+        """
+        # Destroy all widgets inside the main window
+        for widget in self.master.winfo_children():
+            widget.destroy()
+
+        # Reimport and reinitialize the main application
+        from main import MainApplication  # Import your main application class
+
+        MainApplication(self.master)  # Restart the main interface
 
     def switch_to_main_interface(self):
         self.frm1.pack_forget()

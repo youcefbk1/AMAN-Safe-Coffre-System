@@ -24,7 +24,6 @@ class Page7FR:
         self.price = self.get_active_user_price()  # Fetch the active user's price
         self.casier_num()  # Call the method to populate self.casier_id
 
-
         # Check if the UART connection is already open
         if not hasattr(self, 'uart') or not self.uart.is_open:
             self.uart = serial.Serial(
@@ -35,7 +34,6 @@ class Page7FR:
                 bytesize=serial.EIGHTBITS,
                 timeout=1,
             )
-
 
         self.setup_gui()
         self.send_data_to_raspberry()  # Send the price to the Raspberry Pi
@@ -267,11 +265,17 @@ class Page7FR:
         Page8FR(self.master, self, self.cursor, self.conn)
 
     def return_to_main(self):
-        self.frm1.pack_forget()
-        self.frm2.pack_forget()
-        self.frm3.pack_forget()
-        self.frm_box.place_forget()
-        self.main_app.switch_to_main_interface()
+        """
+        Resets the application without closing the window.
+        """
+        # Destroy all widgets inside the main window
+        for widget in self.master.winfo_children():
+            widget.destroy()
+
+        # Reimport and reinitialize the main application
+        from main import MainApplication  # Import your main application class
+
+        MainApplication(self.master)  # Restart the main interface
 
     def switch_to_main_interface(self):
         self.frm1.pack_forget()

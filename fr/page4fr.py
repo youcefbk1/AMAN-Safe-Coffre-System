@@ -136,7 +136,7 @@ class Page4FR:
         self.frm3.pack_forget()
         # Create an instance of LanguageInterface from page2.py
         Page5FR(self.master, self, self.cursor, self.conn)
-        
+
     def switch_to_page9fr(self):
         self.frm1.pack_forget()
         self.frm2.pack_forget()
@@ -145,12 +145,17 @@ class Page4FR:
         Page9FR(self.master, self, self.cursor, self.conn)
 
     def return_to_main(self):
-        self.frm1.pack_forget()
-        self.frm2.pack_forget()
-        self.frm3.pack_forget()
-        # Hide the language interface
-        # Show the main interface
-        self.main_app.switch_to_main_interface()
+        """
+        Resets the application without closing the window.
+        """
+        # Destroy all widgets inside the main window
+        for widget in self.master.winfo_children():
+            widget.destroy()
+
+        # Reimport and reinitialize the main application
+        from main import MainApplication  # Import your main application class
+
+        MainApplication(self.master)  # Restart the main interface
 
     def switch_to_main_interface(self):
         self.frm1.pack_forget()
