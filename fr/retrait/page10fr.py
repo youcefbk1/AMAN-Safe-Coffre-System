@@ -11,7 +11,9 @@ class Page10FR:
         self.main_app = main_app  # Save the MainApplication instance
         self.cursor = cursor  # Save the cursor
         self.conn = conn  # Save the conn
+        self.inactivity_timer = None  # Initialize the inactivity timer
         self.setup_gui()
+        self.reset_timer()  # Start the inactivity timer
 
     def setup_gui(self):
         # Set French locale for date
@@ -92,6 +94,13 @@ class Page10FR:
         from main import MainApplication  # Import your main application class
 
         MainApplication(self.master)  # Restart the main interface
+
+    def reset_timer(self):
+        if self.inactivity_timer is not None:
+            self.master.after_cancel(self.inactivity_timer)
+        self.inactivity_timer = self.master.after(
+            60000, self.return_to_main
+        )  # 1 minute = 60000 ms
 
 
 if __name__ == "__main__":

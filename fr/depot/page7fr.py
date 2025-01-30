@@ -35,7 +35,9 @@ class Page7FR:
                 timeout=1,
             )
 
+        self.inactivity_timer = None  # Initialize the inactivity timer
         self.setup_gui()
+        self.reset_timer()  # Start the inactivity timer
         self.send_data_to_raspberry()  # Send the price to the Raspberry Pi
         self.wait_for_signal()  # Start waiting for the "done" signal
 
@@ -155,7 +157,7 @@ class Page7FR:
         self.frm2 = Frame(self.master, bg="#F2F7F9", height=360, width=800)
         self.frm_box = Frame(self.master, bg="#F2F7F9", height=300, width=300)
         self.frm_box.place(x=600, y=100)
-        
+
         box1 = CTkButton(
             master=self.frm_box,
             text="A",
@@ -278,6 +280,7 @@ class Page7FR:
         # self.stop_signal_check = True  # Stop the signal check loop
 
     def switch_to_page8fr(self):
+        self.reset_timer()  # Reset the timer on interaction
         # Change vers la page suivante
         if hasattr(self, "uart") and self.uart.is_open:
             self.uart.close()
@@ -320,6 +323,7 @@ class Page7FR:
         MainApplication(self.master)  # Restart the main interface
 
     def switch_to_main_interface(self):
+        self.reset_timer()  # Reset the timer on interaction
         self.frm1.pack_forget()
         self.frm2.pack_forget()
         self.frm3.pack_forget()
@@ -330,6 +334,13 @@ class Page7FR:
         if hasattr(self, "uart") and self.uart.is_open:
             self.uart.close()
             print("Connexion UART fermée.")
+
+    def reset_timer(self):
+        if self.inactivity_timer is not None:
+            self.master.after_cancel(self.inactivity_timer)
+        self.inactivity_timer = self.master.after(
+            60000, self.return_to_main
+        )  # 1 minute = 60000 ms
 
 
 if __name__ == "__main__":

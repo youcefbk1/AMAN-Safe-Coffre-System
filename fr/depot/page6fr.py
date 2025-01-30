@@ -13,7 +13,9 @@ class Page6FR:
         self.cursor = cursor
         self.conn = conn
         self.casier_id = None  # Initialisez avec un ID de casier par défaut
+        self.inactivity_timer = None  # Initialize the inactivity timer
         self.setup_gui()
+        self.reset_timer()  # Start the inactivity timer
 
     def setup_gui(self):
         locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
@@ -178,6 +180,7 @@ class Page6FR:
             print(f"Erreur lors de l'enregistrement du choix : {e}")
 
     def switch_to_page7fr(self):
+        self.reset_timer()  # Reset the timer on interaction
         # Change vers la page suivante
         self.frm1.pack_forget()
         self.frm2.pack_forget()
@@ -208,10 +211,18 @@ class Page6FR:
         MainApplication(self.master)  # Restart the main interface
 
     def switch_to_main_interface(self):
+        self.reset_timer()  # Reset the timer on interaction
         self.frm1.pack_forget()
         self.frm2.pack_forget()
         self.frm3.pack_forget()
         self.main_app.switch_to_main_interface()
+
+    def reset_timer(self):
+        if self.inactivity_timer is not None:
+            self.master.after_cancel(self.inactivity_timer)
+        self.inactivity_timer = self.master.after(
+            60000, self.return_to_main
+        )  # 1 minute = 60000 ms
 
 
 if __name__ == "__main__":

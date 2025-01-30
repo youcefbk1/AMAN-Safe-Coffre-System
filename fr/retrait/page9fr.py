@@ -18,9 +18,9 @@ class Page9FR:
 
         # Fetch username automatically from the database
         self.fetch_username()
+        self.inactivity_timer = None  # Initialize the inactivity timer
         self.setup_gui()
-
-
+        self.reset_timer()  # Start the inactivity timer
 
     def start_raspberry_script(self):
         """
@@ -291,9 +291,9 @@ class Page9FR:
             print("Utilisateur supprimé avec succès.")
         except Exception as e:
             print(f"Erreur lors de la suppression de l'utilisateur : {e}")
-            
-            
+
     def switch_to_page10fr(self):
+        self.reset_timer()  # Reset the timer on interaction
         self.frm1.pack_forget()
         self.frm2.pack_forget()
         self.frm3.pack_forget()
@@ -301,6 +301,7 @@ class Page9FR:
         Page10FR(self.master, self, self.cursor, self.conn)
 
     def switch_to_main_interface(self):
+        self.reset_timer()  # Reset the timer on interaction
         self.frm1.pack_forget()
         self.frm2.pack_forget()
         self.frm3.pack_forget()
@@ -319,6 +320,13 @@ class Page9FR:
         from main import MainApplication  # Import your main application class
 
         MainApplication(self.master)  # Restart the main interface
+
+    def reset_timer(self):
+        if self.inactivity_timer is not None:
+            self.master.after_cancel(self.inactivity_timer)
+        self.inactivity_timer = self.master.after(
+            60000, self.return_to_main
+        )  # 1 minute = 60000 ms
 
 
 if __name__ == "__main__":

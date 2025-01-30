@@ -15,7 +15,9 @@ class Page8FR:
         self.conn = conn
         self.casier_id = None  # Initialize with a default locker ID
         self.user_data = self.get_active_user_data()  # Fetch active user data
+        self.inactivity_timer = None  # Initialize the inactivity timer
         self.setup_gui()
+        self.reset_timer()  # Start the inactivity timer
 
     def get_active_user_data(self):
         """
@@ -248,6 +250,13 @@ class Page8FR:
         from main import MainApplication  # Import your main application class
 
         MainApplication(self.master)  # Restart the main interface
+
+    def reset_timer(self):
+        if self.inactivity_timer is not None:
+            self.master.after_cancel(self.inactivity_timer)
+        self.inactivity_timer = self.master.after(
+            60000, self.return_to_main
+        )  # 1 minute = 60000 ms
 
 
 if __name__ == "__main__":

@@ -16,7 +16,9 @@ class Page3FR:
         self.main_app = main_app  # Save the MainApplication instance
         self.cursor = cursor  # Save the cursor
         self.conn = conn  # Save the conn
+        self.inactivity_timer = None  # Initialize the inactivity timer
         self.setup_gui()
+        self.reset_timer()  # Start the inactivity timer
 
     def setup_gui(self):
         locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
@@ -142,6 +144,7 @@ class Page3FR:
             return False
 
     def switch_to_page4fr(self):
+        self.reset_timer()  # Reset the timer on interaction
         self.frm1.pack_forget()
         self.frm2.pack_forget()
         self.frm3.pack_forget()
@@ -211,12 +214,20 @@ class Page3FR:
         MainApplication(self.master)  # Restart the main interface
 
     def switch_to_main_interface(self):
+        self.reset_timer()  # Reset the timer on interaction
         self.frm1.pack_forget()
         self.frm2.pack_forget()
         self.frm3.pack_forget()
         # Hide the language interface
         # Show the main interface
         self.main_app.switch_to_main_interface()
+
+    def reset_timer(self):
+        if self.inactivity_timer is not None:
+            self.master.after_cancel(self.inactivity_timer)
+        self.inactivity_timer = self.master.after(
+            60000, self.return_to_main
+        )  # 1 minute = 60000 ms
 
 
 if __name__ == "__main__":
