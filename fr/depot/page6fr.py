@@ -186,8 +186,18 @@ class Page6FR:
 
     def return_to_main(self):
         """
-        Resets the application without closing the window.
+        Checks if there is an active user, deletes the user from the database where paid = 0,
+        and resets the application without closing the window.
         """
+        try:
+
+            # Delete user where paid = 0
+            self.cursor.execute("DELETE FROM person WHERE actif = 1 AND paid = 0")
+            self.conn.commit()
+            print("Deleted unpaid active user.")
+        except Exception as e:
+            print(f"Error deleting user: {e}")
+
         # Destroy all widgets inside the main window
         for widget in self.master.winfo_children():
             widget.destroy()

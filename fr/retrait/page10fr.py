@@ -80,9 +80,7 @@ class Page10FR:
         self.frm3.pack(fill=X, side=BOTTOM)
 
     def return_to_main(self):
-        if hasattr(self, "uart") and self.uart.is_open:
-            self.uart.close()
-            print("Connexion UART fermée.")
+
         """
         Resets the application without closing the window.
         """

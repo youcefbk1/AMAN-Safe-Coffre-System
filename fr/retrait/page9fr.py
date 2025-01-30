@@ -307,9 +307,7 @@ class Page9FR:
         self.main_app.switch_to_main_interface()  # Changez cette ligne selon votre logique
 
     def return_to_main(self):
-        if hasattr(self, "uart") and self.uart.is_open:
-            self.uart.close()
-            print("Connexion UART fermée.")
+
         """
         Resets the application without closing the window.
         """

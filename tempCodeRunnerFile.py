@@ -1,22 +1,137 @@
-   def start_raspberry_script(self):
-        """
-        Starts the Raspberry Pi script remotely using SSH.
-        """
-        try:
-            ssh = paramiko.SSHClient()
-            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+import tkinter as tk
+from customtkinter import *
+from PIL import ImageTk, Image
+from datetime import datetime
+import locale
+import sqlite3
+from page2 import LanguageInterface
+from fr.page3fr import Page3FR
+import paramiko
 
-            # Connect to Raspberry Pi (Change IP, username, and password)
-            ssh.connect(hostname="raspberrypi.local", username="aman", password="aman")
 
-            # Kill any previous instance of the script
-            ssh.exec_command("pkill -f raspberry_script.py")
+class MainApplication:
 
-            # Start the Raspberry Pi script in the background
-            ssh.exec_command("nohup python3 /home/aman/aman/raspberry_script.py &")
+    def __init__(self, master):
+        self.master = master
 
-            print("Raspberry Pi script started successfully.")
-            ssh.close()
+        self.setup_gui()
 
-        except Exception as e:
-            print(f"Error starting Raspberry Pi script: {e}")
+    def setup_gui(self):
+        # Met la localisation suivant la France permet d'avoir la langue française pour la date
+        locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
+
+        # Partie initialisation de la fenêtre
+        self.master.title("AMAN")
+        self.master.iconbitmap("image/AMAN-LOGO.ico")
+        self.master.geometry("1920x1080")
+        self.master.minsize(1920, 1080)
+        self.master.maxsize(1920, 1080)
+        self.master.config(bg="#F2F7F9")
+
+        # Connexion à la base de données SQLite
+        self.conn = sqlite3.connect("db.sqlite")
+        self.cursor = self.conn.cursor()
+
+        # Call methods to create tables and insert data
+        self.create_person_table()
+
+    def create_person_table(self):
+        # Create the person table if it does not exist
+        self.cursor.execute(
+            """CREATE TABLE IF NOT EXISTS person (
+                        id INTEGER PRIMARY KEY,
+                        username INTEGER,
+                        password INTEGER,
+                        casier INTEGER,
+                        actif BOOLEAN DEFAULT 0,
+                        paid BOOLEAN DEFAULT 0,
+                        price INTEGER,
+                        time INTEGER,
+                        FOREIGN KEY (casier) REFERENCES casier(id)
+                    )"""
+        )
+
+        self.conn.commit()
+
+        # Bande bleue d'en haut avec logo AMAN
+        self.frm1 = tk.Frame(self.master, bg="#1679EF", height=100)
+        self.frm1.pack(fill=tk.X, side=tk.TOP, pady=30)
+
+        self.old_image_frm1 = Image.open("image/AMAN-BLEU.png")
+        self.resized_frm1 = self.old_image_frm1.resize((120, 100), Image.LANCZOS)
+        self.new_image_frm1 = ImageTk.PhotoImage(self.resized_frm1)
+        self.label1 = tk.Label(
+            self.frm1, image=self.new_image_frm1, highlightthickness=0, bd=0
+        )
+        self.label1.image = (
+            self.new_image_frm1
+        )  # Keep a reference to avoid garbage collection
+        self.label1.pack(expand=tk.YES)
+
+        # Frame2 c'est la partie centrale de la fenêtre
+        self.frm2 = tk.Frame(self.master, bg="#F2F7F9")
+
+        self.old_image_frm2 = Image.open("image/AMAN-WHITE.jpg")
+        self.resize_frm2 = self.old_image_frm2.resize((480, 280), Image.LANCZOS)
+        self.new_image_frm2 = ImageTk.PhotoImage(self.resize_frm2)
+        self.label = tk.Label(
+            self.frm2,
+            bg="#1679EF",
+            image=self.new_image_frm2,
+            bd=0,
+            highlightthickness=0,
+        )
+        self.label.image = (
+            self.new_image_frm2
+        )  # Keep a reference to avoid garbage collection
+        self.label.pack(pady=80)
+
+        self.button = CTkButton(
+            master=self.frm2,
+            text="Start      ابدا ",
+            font=(("Arial"), 28),
+            width=500,
+            height=120,
+            fg_color="#1679EF",
+            text_color="#F2F7F9",
+            border_width=0,
+            corner_radius=4,
+            command=self.switch_to_language_interface,
+        )  # Appelle la fonction show_page2 lorsque le bouton est cliqué
+        self.button.pack()
+        self.frm2.pack()
+
+        # Bande bleue d'en bas
+        self.frm3 = tk.Frame(self.master, bg="#1679EF", height=60)
+        self.date_label = tk.Label(
+            self.frm3,
+            text=self.get_current_date_time(),
+            font=("Arial", 24),
+            fg="#F2F7F9",
+            bg="#1679EF",
+        )
+        self.date_label.pack(expand=tk.YES)
+        self.frm3.pack(fill=tk.X, side=tk.BOTTOM)
+
+    def get_current_date_time(self):
+        date = datetime.now()
+        return f"{date:%d-%m-%Y}  /  {date:%I:%M}"
+
+    def switch_to_language_interface(self):
+        self.frm1.pack_forget()
+        self.frm2.pack_forget()
+        self.frm3.pack_forget()
+        # Create an instance of LanguageInterface from page2.py
+        LanguageInterface(self.master, self, self.cursor, self.conn)
+
+    def switch_to_main_interface(self):
+        # Show the main interface again
+        self.frm1.pack(fill=tk.X, side=tk.TOP, pady=30)
+        self.frm2.pack()
+        self.frm3.pack(fill=tk.X, side=tk.BOTTOM)
+
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = MainApplication(root)
+    root.mainloop()

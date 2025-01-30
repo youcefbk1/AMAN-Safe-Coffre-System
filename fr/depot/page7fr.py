@@ -20,6 +20,7 @@ class Page7FR:
         self.cursor = cursor
         self.conn = conn
         self.casier_id = None  # Initialize with a default locker ID
+        # self.stop_signal_check = False  # Flag to stop the signal check loop
         self.price = self.get_active_user_price()  # Fetch the active user's price
         self.casier_num()  # Call the method to populate self.casier_id
 
@@ -59,8 +60,11 @@ class Page7FR:
         Waits for the "done" signal from the Raspberry Pi via UART.
         """
         try:
+            # if self.stop_signal_check:
+            #     return  # Exit the loop if the flag is set
             if self.uart.is_open:
                 # Check for incoming data
+                print ("uart is open, waiting for signal")
                 data = self.uart.readline().decode("utf-8").strip()
                 if data == "done":
                     print("Signal received: Payment successful.")
@@ -70,12 +74,12 @@ class Page7FR:
                     # Retry after 500ms
                     self.master.after(500, self.wait_for_signal)
             else:
-                print("UART connection is not open.")
-                self.master.after(500, self.wait_for_signal)
+                print("UART connection is not openNNNNNN.")
+                # self.master.after(500, self.wait_for_signal)
         except Exception as e:
             print(f"Error waiting for signal: {e}")
             self.master.after(500, self.wait_for_signal)
-            
+
     def paid(self):
         """
         Update the 'paid' column in the 'person' table to mark the user as paid.
@@ -86,7 +90,6 @@ class Page7FR:
             print("User marked as paid.")
         except Exception as e:
             print(f"Error marking user as paid: {e}")
-            
 
     def send_data_to_raspberry(self):
         """
@@ -152,7 +155,7 @@ class Page7FR:
         self.frm2 = Frame(self.master, bg="#F2F7F9", height=360, width=800)
         self.frm_box = Frame(self.master, bg="#F2F7F9", height=300, width=300)
         self.frm_box.place(x=600, y=100)
-
+        
         box1 = CTkButton(
             master=self.frm_box,
             text="A",
@@ -194,6 +197,14 @@ class Page7FR:
             hover=None,
         )
         box13.grid(row=2, column=0, padx=0.5, pady=0.5, rowspan=2)
+
+        # according to the selected self.casier_id color the box below with blue and turn text to white
+        if self.casier_id == 1:
+            box1.configure(fg_color="#1679EF", text_color="#FFFFFF")
+        elif self.casier_id == 2:
+            box5.configure(fg_color="#1679EF", text_color="#FFFFFF")
+        elif self.casier_id == 3:
+            box13.configure(fg_color="#1679EF", text_color="#FFFFFF")
 
         self.frm_msg = CTkFrame(master=self.frm2, fg_color="#F2F7F9")
 
@@ -264,12 +275,14 @@ class Page7FR:
         )
         label2.pack(expand=YES)
         self.frm3.pack(fill=X, side=BOTTOM)
+        # self.stop_signal_check = True  # Stop the signal check loop
 
     def switch_to_page8fr(self):
         # Change vers la page suivante
         if hasattr(self, "uart") and self.uart.is_open:
             self.uart.close()
             print("Connexion UART fermée.")
+
         self.frm1.pack_forget()
         self.frm2.pack_forget()
         self.frm3.pack_forget()
@@ -277,12 +290,26 @@ class Page7FR:
         Page8FR(self.master, self, self.cursor, self.conn)
 
     def return_to_main(self):
+        """
+        Handles the return to the main interface by closing the UART connection,
+        deleting unpaid active users, and restarting the main application.
+        """
         if hasattr(self, "uart") and self.uart.is_open:
             self.uart.close()
             print("Connexion UART fermée.")
         """
-        Resets the application without closing the window.
+        Checks if there is an active user, deletes the user from the database where paid = 0,
+        and resets the application without closing the window.
         """
+        try:
+
+            # Delete user where paid = 0
+            self.cursor.execute("DELETE FROM person WHERE actif = 1 AND paid = 0")
+            self.conn.commit()
+            print("Deleted unpaid active user.")
+        except Exception as e:
+            print(f"Error deleting user: {e}")
+
         # Destroy all widgets inside the main window
         for widget in self.master.winfo_children():
             widget.destroy()

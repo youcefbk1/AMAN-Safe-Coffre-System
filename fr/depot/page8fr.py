@@ -15,7 +15,6 @@ class Page8FR:
         self.conn = conn
         self.casier_id = None  # Initialize with a default locker ID
         self.user_data = self.get_active_user_data()  # Fetch active user data
-
         self.setup_gui()
 
     def get_active_user_data(self):
@@ -239,21 +238,8 @@ class Page8FR:
 
         self.frm3.pack(fill=X, side=BOTTOM)
 
-    # def return_to_main(self):
-    #     self.frm1.pack_forget()
-    #     self.frm2.pack_forget()
-    #     self.frm3.pack_forget()
-    #     self.main_app.switch_to_main_interface()
-    def __del__(self):
-        if hasattr(self, "uart") and self.uart.is_open:
-            self.uart.close()
-            print("Connexion UART fermée.")
-
     def return_to_main(self):
 
-        """
-        Resets the application without closing the window.
-        """
         # Destroy all widgets inside the main window
         for widget in self.master.winfo_children():
             widget.destroy()
