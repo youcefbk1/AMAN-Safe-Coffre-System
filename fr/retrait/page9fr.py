@@ -39,7 +39,11 @@ class Page9FR:
             casier_id = result[0]  # Get the casier ID
 
             # Map casier_id to the corresponding script
-            script_mapping = {1: "open_relay1.py", 2: "open_relay2.py", 3: "open_relay3.py"}
+            script_mapping = {
+                1: "open_relay1.py",
+                2: "open_relay2.py",
+                3: "open_relay3.py",
+            }
 
             script_name = script_mapping.get(casier_id)
 
@@ -258,7 +262,9 @@ class Page9FR:
         password = self.entry_password.get().strip()
 
         if not password:
-            self.lbl_error.configure(text="Veuillez entrer un mot de passe.")  # Affiche un message d'erreur
+            self.lbl_error.configure(
+                text="Veuillez entrer un mot de passe."
+            )  # Affiche un message d'erreur
             return
 
         try:
@@ -276,10 +282,14 @@ class Page9FR:
                 self.switch_to_page10fr()
                 self.delete_user()
             else:
-                self.lbl_error.configure(text="Mot de passe incorrect.")  # Affiche l'erreur en rouge sous le champ
+                self.lbl_error.configure(
+                    text="Mot de passe incorrect."
+                )  # Affiche l'erreur en rouge sous le champ
 
         except Exception as e:
-            self.lbl_error.configure(text="Erreur lors de la connexion.")  # Gère l'erreur SQL
+            self.lbl_error.configure(
+                text="Erreur lors de la connexion."
+            )  # Gère l'erreur SQL
 
     def delete_user(self):
         """
@@ -308,7 +318,7 @@ class Page9FR:
         self.main_app.switch_to_main_interface()  # Changez cette ligne selon votre logique
 
     def return_to_main(self):
-
+        self.reset_timer()  # Reset the timer on interaction
         """
         Resets the application without closing the window.
         """
@@ -322,11 +332,15 @@ class Page9FR:
         MainApplication(self.master)  # Restart the main interface
 
     def reset_timer(self):
+        print("Resetting timer")
         if self.inactivity_timer is not None:
             self.master.after_cancel(self.inactivity_timer)
-        self.inactivity_timer = self.master.after(
-            60000, self.return_to_main
-        )  # 1 minute = 60000 ms
+            print("Cancelled timer")
+        else:
+            self.inactivity_timer = self.master.after(
+                60000, self.return_to_main
+            )  # 1 minute = 60000 ms
+            print("Starting timer")
 
 
 if __name__ == "__main__":

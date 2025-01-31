@@ -168,13 +168,13 @@ class Page3FR:
         # Set all users to inactive first
         self.cursor.execute("UPDATE person SET actif = 0")
 
-        if  existing_user: 
+        if existing_user:
             self.cursor.execute(
                 "UPDATE person SET actif = ? WHERE id = ?",
                 (1, existing_user[0]),
-            )  
+            )
             self.conn.commit()
-        else :
+        else:
             # Insert the new user and set them as active
             self.cursor.execute(
                 """
@@ -201,6 +201,7 @@ class Page3FR:
         self.switch_to_page4fr()
 
     def return_to_main(self):
+        self.reset_timer()  # Reset the timer on interaction
         """
         Resets the application without closing the window.
         """
@@ -223,11 +224,15 @@ class Page3FR:
         self.main_app.switch_to_main_interface()
 
     def reset_timer(self):
+        print("Resetting timer")
         if self.inactivity_timer is not None:
             self.master.after_cancel(self.inactivity_timer)
-        self.inactivity_timer = self.master.after(
-            60000, self.return_to_main
-        )  # 1 minute = 60000 ms
+            print("Cancelled timer")
+        else:
+            self.inactivity_timer = self.master.after(
+                60000, self.return_to_main
+            )  # 1 minute = 60000 ms
+            print("Starting timer")
 
 
 if __name__ == "__main__":

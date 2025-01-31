@@ -191,7 +191,7 @@ class Page5FR:
         label2.pack(expand=YES)
         self.frm3.pack(fill=X, side=BOTTOM)
 
-    def switch_to_page6fr(self,volume):
+    def switch_to_page6fr(self, volume):
         self.reset_timer()  # Reset the timer on interaction
         casier_value = 0
         if volume == "A":
@@ -222,6 +222,7 @@ class Page5FR:
         Page6FR(self.master, self, self.cursor, self.conn)
 
     def return_to_main(self):
+        self.reset_timer()  # Reset the timer on interaction
         """
         Checks if there is an active user, deletes the user from the database where paid = 0,
         and resets the application without closing the window.
@@ -254,11 +255,15 @@ class Page5FR:
         self.main_app.switch_to_main_interface()
 
     def reset_timer(self):
+        print("Resetting timer")
         if self.inactivity_timer is not None:
             self.master.after_cancel(self.inactivity_timer)
-        self.inactivity_timer = self.master.after(
-            60000, self.return_to_main
-        )  # 1 minute = 60000 ms
+            print("Cancelled timer")
+        else:
+            self.inactivity_timer = self.master.after(
+                60000, self.return_to_main
+            )  # 1 minute = 60000 ms
+            print("Starting timer")
 
 
 if __name__ == "__main__":

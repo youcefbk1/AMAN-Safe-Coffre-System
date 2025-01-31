@@ -25,7 +25,7 @@ class Page7FR:
         self.casier_num()  # Call the method to populate self.casier_id
 
         # Check if the UART connection is already open
-        if not hasattr(self, 'uart') or not self.uart.is_open:
+        if not hasattr(self, "uart") or not self.uart.is_open:
             self.uart = serial.Serial(
                 port="COM3",
                 baudrate=9600,
@@ -66,7 +66,7 @@ class Page7FR:
             #     return  # Exit the loop if the flag is set
             if self.uart.is_open:
                 # Check for incoming data
-                print ("uart is open, waiting for signal")
+                print("uart is open, waiting for signal")
                 data = self.uart.readline().decode("utf-8").strip()
                 if data == "done":
                     print("Signal received: Payment successful.")
@@ -293,6 +293,7 @@ class Page7FR:
         Page8FR(self.master, self, self.cursor, self.conn)
 
     def return_to_main(self):
+        self.reset_timer()  # Reset the timer on interaction
         """
         Handles the return to the main interface by closing the UART connection,
         deleting unpaid active users, and restarting the main application.
@@ -336,11 +337,15 @@ class Page7FR:
             print("Connexion UART fermée.")
 
     def reset_timer(self):
+        print("Resetting timer")
         if self.inactivity_timer is not None:
             self.master.after_cancel(self.inactivity_timer)
-        self.inactivity_timer = self.master.after(
-            60000, self.return_to_main
-        )  # 1 minute = 60000 ms
+            print("Cancelled timer")
+        else:
+            self.inactivity_timer = self.master.after(
+                60000, self.return_to_main
+            )  # 1 minute = 60000 ms
+            print("Starting timer")
 
 
 if __name__ == "__main__":

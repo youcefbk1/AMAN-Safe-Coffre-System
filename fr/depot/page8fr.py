@@ -6,6 +6,7 @@ import locale
 import os
 import sys
 
+
 class Page8FR:
 
     def __init__(self, master, main_app, cursor, conn):
@@ -241,6 +242,7 @@ class Page8FR:
         self.frm3.pack(fill=X, side=BOTTOM)
 
     def return_to_main(self):
+        self.reset_timer()  # Reset the timer on interaction
 
         # Destroy all widgets inside the main window
         for widget in self.master.winfo_children():
@@ -252,11 +254,15 @@ class Page8FR:
         MainApplication(self.master)  # Restart the main interface
 
     def reset_timer(self):
+        print("Resetting timer")
         if self.inactivity_timer is not None:
             self.master.after_cancel(self.inactivity_timer)
-        self.inactivity_timer = self.master.after(
-            60000, self.return_to_main
-        )  # 1 minute = 60000 ms
+            print("Cancelled timer")
+        else:
+            self.inactivity_timer = self.master.after(
+                60000, self.return_to_main
+            )  # 1 minute = 60000 ms
+            print("Starting timer")
 
 
 if __name__ == "__main__":
