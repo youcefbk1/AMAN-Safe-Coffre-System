@@ -3,6 +3,8 @@ from customtkinter import *
 from PIL import Image, ImageTk
 from datetime import datetime
 import locale
+from ar.depotAR.page5ar import Page5AR
+from ar.retraitAR.page9ar import Page9AR
 
 
 class Page4AR:
@@ -11,7 +13,9 @@ class Page4AR:
         self.main_app = main_app  # Save the MainApplication instance
         self.cursor = cursor  # Save the cursor
         self.conn = conn  # Save the conn
+        self.inactivity_timer = None  # Initialize the inactivity timer
         self.setup_gui()
+        self.reset_timer()  # Start the inactivity timer
 
     def setup_gui(self):
         # Set locale for French date format
@@ -60,6 +64,7 @@ class Page4AR:
             height=50,
             border_width=0,
             corner_radius=4,
+            command=self.switch_to_page5ar,
         )
         btn1.place(x=385, y=130)
 
@@ -73,6 +78,7 @@ class Page4AR:
             height=50,
             border_width=0,
             corner_radius=4,
+            command=self.switch_to_page9ar,
         )
         btn2.place(x=385, y=230)
 
@@ -126,13 +132,65 @@ class Page4AR:
         label2.pack(expand=YES)
         self.frm3.pack(fill=X, side=BOTTOM)
 
+    def switch_to_page5ar(self):
+        self.reset_timer()  # Reset the timer on interaction
+        self.frm1.pack_forget()
+        self.frm2.pack_forget()
+        self.frm3.pack_forget()
+        # Create an instance of LanguageInterface from page2.py
+        Page5AR(self.master, self, self.cursor, self.conn)
+
+    def switch_to_page9ar(self):
+        self.reset_timer()  # Reset the timer on interaction
+        self.frm1.pack_forget()
+        self.frm2.pack_forget()
+        self.frm3.pack_forget()
+        # Create an instance of LanguageInterface from page2.py
+        Page9AR(self.master, self, self.cursor, self.conn)
+
     def return_to_main(self):
+        self.reset_timer()  # Reset the timer on interaction
+        """
+        Checks if there is an active user, deletes the user from the database where paid = 0,
+        and resets the application without closing the window.
+        """
+        try:
+
+            # Delete user where paid = 0
+            self.cursor.execute("DELETE FROM person WHERE actif = 1 AND paid = 0")
+            self.conn.commit()
+            print("Deleted unpaid active user.")
+        except Exception as e:
+            print(f"Error deleting user: {e}")
+
+        # Destroy all widgets inside the main window
+        for widget in self.master.winfo_children():
+            widget.destroy()
+
+        # Reimport and reinitialize the main application
+        from main import MainApplication  # Import your main application class
+
+        MainApplication(self.master)  # Restart the main interface
+
+    def switch_to_main_interface(self):
+        self.reset_timer()  # Reset the timer on interaction
         self.frm1.pack_forget()
         self.frm2.pack_forget()
         self.frm3.pack_forget()
         # Hide the language interface
         # Show the main interface
         self.main_app.switch_to_main_interface()
+
+    def reset_timer(self):
+        print("Resetting timer")
+        if self.inactivity_timer is not None:
+            self.master.after_cancel(self.inactivity_timer)
+            print("Cancelled timer")
+        else:
+            self.inactivity_timer = self.master.after(
+                100000, self.return_to_main
+            )  # 1 minute = 100000 ms
+            print("Starting timer")
 
 
 if __name__ == "__main__":

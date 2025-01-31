@@ -8,13 +8,16 @@ import random
 import string
 from ar.page4ar import Page4AR
 
+
 class Page3AR:
     def __init__(self, master, main_app, cursor, conn):
         self.master = master
         self.main_app = main_app  # Save the MainApplication instance
         self.cursor = cursor  # Save the cursor
         self.conn = conn  # Save the conn
+        self.inactivity_timer = None  # Initialize the inactivity timer
         self.setup_gui()
+        self.reset_timer()  # Start the inactivity timer
 
     def setup_gui(self):
         locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
@@ -149,19 +152,12 @@ class Page3AR:
             return False
 
     def switch_to_page4ar(self):
+        self.reset_timer()  # Reset the timer on interaction
         self.frm1.pack_forget()
         self.frm2.pack_forget()
         self.frm3.pack_forget()
         # Create an instance of LanguageInterface from page2.py
-        page4fr = Page4AR(self.master, self, self.cursor, self.conn)
-
-    def return_to_main(self):
-        self.frm1.pack_forget()
-        self.frm2.pack_forget()
-        self.frm3.pack_forget()
-        # Hide the language interface
-        # Show the main interface
-        self.main_app.switch_to_main_interface()
+        Page4AR(self.master, self, self.cursor, self.conn)
 
     def generate_password(self):
         # Generate a random password of 6 digits
@@ -173,12 +169,29 @@ class Page3AR:
         # Generate a password
         password = self.generate_password()
 
-        # Execute SQL command to insert data into the person table
-        self.cursor.execute(
-            """INSERT INTO person (username, password) VALUES (?, ?)""",
-            (entry_text, password),
-        )
-        self.conn.commit()
+        # Check if the username already exists
+        self.cursor.execute("SELECT id FROM person WHERE username = ?", (entry_text,))
+        existing_user = self.cursor.fetchone()
+
+        # Set all users to inactive first
+        self.cursor.execute("UPDATE person SET actif = 0")
+
+        if existing_user:
+            self.cursor.execute(
+                "UPDATE person SET actif = ? WHERE id = ?",
+                (1, existing_user[0]),
+            )
+            self.conn.commit()
+        else:
+            # Insert the new user and set them as active
+            self.cursor.execute(
+                """
+                INSERT INTO person (username, password, actif)
+                VALUES (?, ?, ?)
+                """,
+                (entry_text, password, 1),  # Actif = 1 pour ce nouvel utilisateur
+            )
+            self.conn.commit()
 
     def save_and_switch(self):
         # Get the entry text
@@ -195,13 +208,39 @@ class Page3AR:
         # Switch to page4fr
         self.switch_to_page4ar()
 
+    def return_to_main(self):
+        self.reset_timer()  # Reset the timer on interaction
+        """
+        Resets the application without closing the window.
+        """
+        # Destroy all widgets inside the main window
+        for widget in self.master.winfo_children():
+            widget.destroy()
+
+        # Reimport and reinitialize the main application
+        from main import MainApplication  # Import your main application class
+
+        MainApplication(self.master)  # Restart the main interface
+
     def switch_to_main_interface(self):
+        self.reset_timer()  # Reset the timer on interaction
         self.frm1.pack_forget()
         self.frm2.pack_forget()
         self.frm3.pack_forget()
         # Hide the language interface
         # Show the main interface
         self.main_app.switch_to_main_interface()
+
+    def reset_timer(self):
+        print("Resetting timer")
+        if self.inactivity_timer is not None:
+            self.master.after_cancel(self.inactivity_timer)
+            print("Cancelled timer")
+        else:
+            self.inactivity_timer = self.master.after(
+                100000, self.return_to_main
+            )  # 1 minute = 100000 ms
+            print("Starting timer")
 
 
 if __name__ == "__main__":

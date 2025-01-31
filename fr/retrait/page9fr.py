@@ -320,8 +320,18 @@ class Page9FR:
     def return_to_main(self):
         self.reset_timer()  # Reset the timer on interaction
         """
-        Resets the application without closing the window.
+        Checks if there is an active user, deletes the user from the database where paid = 0,
+        and resets the application without closing the window.
         """
+        try:
+
+            # Delete user where paid = 0
+            self.cursor.execute("DELETE FROM person WHERE actif = 1 AND paid = 0")
+            self.conn.commit()
+            print("Deleted unpaid active user.")
+        except Exception as e:
+            print(f"Error deleting user: {e}")
+
         # Destroy all widgets inside the main window
         for widget in self.master.winfo_children():
             widget.destroy()
@@ -338,8 +348,8 @@ class Page9FR:
             print("Cancelled timer")
         else:
             self.inactivity_timer = self.master.after(
-                60000, self.return_to_main
-            )  # 1 minute = 60000 ms
+                100000, self.return_to_main
+            )  # 1 minute = 100000 ms
             print("Starting timer")
 
 

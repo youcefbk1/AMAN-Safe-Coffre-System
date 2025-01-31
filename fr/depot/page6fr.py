@@ -225,8 +225,8 @@ class Page6FR:
             print("Cancelled timer")
         else:
             self.inactivity_timer = self.master.after(
-                60000, self.return_to_main
-            )  # 1 minute = 60000 ms
+                100000, self.return_to_main
+            )  # 1 minute = 100000 ms
             print("Starting timer")
 
 

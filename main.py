@@ -5,8 +5,7 @@ from datetime import datetime
 import locale
 import sqlite3
 from page2 import LanguageInterface
-from fr.page3fr import Page3FR
-import paramiko
+
 
 
 class MainApplication:
