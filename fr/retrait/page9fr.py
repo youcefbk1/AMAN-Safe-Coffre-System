@@ -301,6 +301,9 @@ class Page9FR:
             print("Utilisateur supprimé avec succès.")
         except Exception as e:
             print(f"Erreur lors de la suppression de l'utilisateur : {e}")
+    
+
+
 
     def switch_to_page10fr(self):
         self.reset_timer()  # Reset the timer on interaction

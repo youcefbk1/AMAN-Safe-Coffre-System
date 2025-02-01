@@ -70,8 +70,9 @@ class Page7FR:
                 data = self.uart.readline().decode("utf-8").strip()
                 if data == "done":
                     print("Signal received: Payment successful.")
+                    self.increment_ticket()  # Increment the ticket number
+                    self.paid()  # Mark the user as paid
                     self.switch_to_page8fr()
-                    self.paid()  # Mark the user as paid in the database
                 else:
                     # Retry after 500ms
                     self.master.after(500, self.wait_for_signal)
@@ -291,6 +292,27 @@ class Page7FR:
         self.frm3.pack_forget()
         self.master.update_idletasks()  # Ensure GUI refresh before switching
         Page8FR(self.master, self, self.cursor, self.conn)
+
+    def increment_ticket(self):
+        """
+        read the ticket_number from database and Increments the ticket_number by 1 from the database.
+        """
+        try:
+            self.cursor.execute("SELECT ticket_number FROM ticket")
+            result = self.cursor.fetchone()
+            if result:
+                ticket_number = result[0]  # Get the ticket_number
+                ticket_number += 1
+                self.cursor.execute(
+                    "UPDATE ticket SET ticket_number = ?", (ticket_number,)
+                )
+                self.conn.commit()
+                print("Ticket number incremented successfully.")
+            else:
+                print("No ticket number found.")
+
+        except Exception as e:
+            print(f"Error incrementing ticket number: {e}")
 
     def return_to_main(self):
         self.reset_timer()  # Reset the timer on interaction

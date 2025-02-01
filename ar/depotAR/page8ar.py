@@ -58,6 +58,26 @@ class Page8AR:
                 "casier": "Error",
                 "price": "Error",
             }
+    def get_ticket_number(self):
+        """
+        Fetches the ticket_number from database ticket table.
+        """
+        try:
+            # Query to get the ticket number
+            self.cursor.execute("SELECT ticket_number FROM ticket")
+            result = self.cursor.fetchone()
+
+            if result:
+                ticket_number = result[0]
+                return ticket_number
+            else:
+                print("No ticket number found.")
+                return "N/A"
+        except Exception as e:
+            print(f"Error fetching ticket number: {e}")
+            return "Error"
+        
+
 
     def setup_gui(self):
         # Set French locale for date
@@ -158,7 +178,7 @@ class Page8AR:
         # la partie à remplire(que tu peux modifier)
         label_date = CTkLabel(
             master=frm_info,
-            text="1111111111",
+            text=self.get_ticket_number(),  # Ticket number
             font=("Arial", 17, "bold"),
             fg_color="#F2F7F9",
             text_color="#1679EF",
@@ -200,6 +220,15 @@ class Page8AR:
             text_color="#1679EF",
         )
         label4.grid(row=4, column=0, padx=40)
+        
+        label_date = CTkLabel(
+            master=frm_info,
+            text=f"{datetime.now():%d-%m-%Y}  /  {datetime.now():%I:%M}",  # Date
+            font=("Arial", 17, "bold"),
+            fg_color="#F2F7F9",
+            text_color="#1679EF",
+        )
+        label_date.grid(row=5, column=0, padx=40)
 
         frm_info.place(x=230, y=0)
 
