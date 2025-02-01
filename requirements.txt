@@ -6,3 +6,4 @@ custom_tkinter
 serial
 arabic-reshaper 
 python-bidi
+pip install pillow

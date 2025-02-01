@@ -161,7 +161,7 @@ class Page3AR:
 
     def generate_password(self):
         # Generate a random password of 6 digits
-        password = "".join(random.choices(string.digits, k=6))
+        password = "".join(random.choices(string.digits, k=4))
         return password
 
     def save_to_database(self):
@@ -238,8 +238,8 @@ class Page3AR:
             print("Cancelled timer")
         else:
             self.inactivity_timer = self.master.after(
-                100000, self.return_to_main
-            )  # 1 minute = 100000 ms
+                120000, self.return_to_main
+            )  # 1 minute = 120000 ms
             print("Starting timer")
 
 
