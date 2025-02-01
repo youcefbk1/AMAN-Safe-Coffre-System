@@ -192,7 +192,7 @@ class Page3FR:
         if not self.validate_username(entry_text):
             # Display an error message in the interface
             self.error_label.config(
-                text="Le nom d'utilisateur doit comporter entre 6 et 9 chiffres"
+                text="Le nom d'utilisateur doit comporter 9 chiffres"
             )
             return
         # Save data to the database

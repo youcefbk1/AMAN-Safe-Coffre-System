@@ -121,12 +121,12 @@ class Page8FR:
         # Labels for ticket details
         label_ticket = CTkLabel(
             master=frm_info,
-            text="N° Ticket :",
+            text=f"N° Ticket: {self.get_ticket_number():04d}",  # Ticket number formatted to 4 digits
             font=("Arial", 17, "bold"),
             fg_color="#F2F7F9",
             text_color="#1679EF",
         )
-        label_ticket.grid(row=0, column=0, sticky="w", padx=40)
+        label_ticket.grid(row=0, column=0, sticky="w", padx=20)
 
         label_nom = CTkLabel(
             master=frm_info,
@@ -135,7 +135,7 @@ class Page8FR:
             fg_color="#F2F7F9",
             text_color="#1679EF",
         )
-        label_nom.grid(row=1, column=0, sticky="w", padx=40)
+        label_nom.grid(row=1, column=0, sticky="w", padx=20)
 
         label_mdp = CTkLabel(
             master=frm_info,
@@ -144,7 +144,7 @@ class Page8FR:
             fg_color="#F2F7F9",
             text_color="#1679EF",
         )
-        label_mdp.grid(row=2, column=0, sticky="w", padx=40)
+        label_mdp.grid(row=2, column=0, sticky="w", padx=20)
 
         label_coffre = CTkLabel(
             master=frm_info,
@@ -153,7 +153,7 @@ class Page8FR:
             fg_color="#F2F7F9",
             text_color="#1679EF",
         )
-        label_coffre.grid(row=3, column=0, sticky="w", padx=40)
+        label_coffre.grid(row=3, column=0, sticky="w", padx=20)
 
         label_montant = CTkLabel(
             master=frm_info,
@@ -162,17 +162,17 @@ class Page8FR:
             fg_color="#F2F7F9",
             text_color="#1679EF",
         )
-        label_montant.grid(row=4, column=0, sticky="w", padx=40)
+        label_montant.grid(row=4, column=0, sticky="w", padx=20)
 
         # Display values from the active user data
-        label_ticket_value = CTkLabel(
+        label_date_value = CTkLabel(
             master=frm_info,
-            text=self.get_ticket_number(),  # Ticket number
+            text=f"{datetime.now():%d-%m-%Y}  /  {datetime.now():%I:%M}",  
             font=("Arial", 17, "bold"),
             fg_color="#F2F7F9",
             text_color="#1679EF",
         )
-        label_ticket_value.grid(row=0, column=1, sticky="w")
+        label_date_value.grid(row=0, column=1, sticky="w", padx=10)
 
         label1 = CTkLabel(
             master=frm_info,
@@ -181,7 +181,7 @@ class Page8FR:
             fg_color="#F2F7F9",
             text_color="#1679EF",
         )
-        label1.grid(row=1, column=1, sticky="w")
+        label1.grid(row=1, column=1, sticky="w", padx=10)
 
         label2 = CTkLabel(
             master=frm_info,
@@ -190,7 +190,7 @@ class Page8FR:
             fg_color="#F2F7F9",
             text_color="#1679EF",
         )
-        label2.grid(row=2, column=1, sticky="w")
+        label2.grid(row=2, column=1, sticky="w", padx=10)
 
         label3 = CTkLabel(
             master=frm_info,
@@ -199,7 +199,7 @@ class Page8FR:
             fg_color="#F2F7F9",
             text_color="#1679EF",
         )
-        label3.grid(row=3, column=1, sticky="w")
+        label3.grid(row=3, column=1, sticky="w", padx=10)
 
         label4 = CTkLabel(
             master=frm_info,
@@ -208,16 +208,7 @@ class Page8FR:
             fg_color="#F2F7F9",
             text_color="#1679EF",
         )
-        label4.grid(row=4, column=1, sticky="w")
-
-        label2 = CTkLabel(
-            master=frm_info,
-            text=f"{datetime.now():%d-%m-%Y}  /  {datetime.now():%I:%M}",
-            font=("Arial", 17, "bold"),
-            fg_color="#F2F7F9",
-            text_color="#1679EF",
-        )
-        label2.grid(row=5, column=1, sticky="w")
+        label4.grid(row=4, column=1, sticky="w", padx=10)
 
         frm_info.place(x=230, y=0)
 

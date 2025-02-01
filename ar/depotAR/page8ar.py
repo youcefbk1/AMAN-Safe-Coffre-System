@@ -76,8 +76,6 @@ class Page8AR:
         except Exception as e:
             print(f"Error fetching ticket number: {e}")
             return "Error"
-        
-
 
     def setup_gui(self):
         # Set French locale for date
@@ -122,14 +120,15 @@ class Page8AR:
 
         reshaped_tex1 = arabic_reshaper.reshape("رقم التذكرة" + " :")
         tex1 = bidi.algorithm.get_display(reshaped_tex1)
+
         label_ticket = CTkLabel(
             master=frm_info,
-            text=tex1,
+            text=f"{self.get_ticket_number():04d} {tex1}",
             font=("Arial", 17, "bold"),
             fg_color="#F2F7F9",
             text_color="#1679EF",
         )
-        label_ticket.grid(row=0, column=1, sticky="e")
+        label_ticket.grid(row=0, column=1, sticky="e", padx=20)
 
         reshaped_text2 = arabic_reshaper.reshape("إسم المستخدم :")
         text2 = bidi.algorithm.get_display(reshaped_text2)
@@ -140,7 +139,7 @@ class Page8AR:
             fg_color="#F2F7F9",
             text_color="#1679EF",
         )
-        label_nom.grid(row=1, column=1, sticky="e")
+        label_nom.grid(row=1, column=1, sticky="e", padx=20)
 
         reshaped_text3 = arabic_reshaper.reshape("كلمة السر :")
         text3 = bidi.algorithm.get_display(reshaped_text3)
@@ -151,7 +150,7 @@ class Page8AR:
             fg_color="#F2F7F9",
             text_color="#1679EF",
         )
-        label_mdp.grid(row=2, column=1, sticky="e")
+        label_mdp.grid(row=2, column=1, sticky="e", padx=20)
 
         reshaped_text4 = arabic_reshaper.reshape("رقم الصندوق :")
         text4 = bidi.algorithm.get_display(reshaped_text4)
@@ -162,7 +161,7 @@ class Page8AR:
             fg_color="#F2F7F9",
             text_color="#1679EF",
         )
-        label_coffre.grid(row=3, column=1, sticky="e")
+        label_coffre.grid(row=3, column=1, sticky="e", padx=20)
 
         reshaped_text5 = arabic_reshaper.reshape("المبلغ الإجمالي :")
         text5 = bidi.algorithm.get_display(reshaped_text5)
@@ -173,17 +172,17 @@ class Page8AR:
             fg_color="#F2F7F9",
             text_color="#1679EF",
         )
-        label_montant.grid(row=4, column=1, sticky="e")
+        label_montant.grid(row=4, column=1, sticky="e", padx=20)
 
         # la partie à remplire(que tu peux modifier)
         label_date = CTkLabel(
             master=frm_info,
-            text=self.get_ticket_number(),  # Ticket number
+            text=f"{datetime.now():%I:%M}  /  {datetime.now():%d-%m-%Y}",  # Ticket number formatted to 4 digits
             font=("Arial", 17, "bold"),
             fg_color="#F2F7F9",
             text_color="#1679EF",
         )
-        label_date.grid(row=0, column=0, padx=40)
+        label_date.grid(row=0, column=0, padx=30)
 
         label1 = CTkLabel(
             master=frm_info,
@@ -192,7 +191,7 @@ class Page8AR:
             fg_color="#F2F7F9",
             text_color="#1679EF",
         )
-        label1.grid(row=1, column=0, padx=40)
+        label1.grid(row=1, column=0, padx=30)
 
         label2 = CTkLabel(
             master=frm_info,
@@ -201,7 +200,7 @@ class Page8AR:
             fg_color="#F2F7F9",
             text_color="#1679EF",
         )
-        label2.grid(row=2, column=0, padx=40)
+        label2.grid(row=2, column=0, padx=30)
 
         label3 = CTkLabel(
             master=frm_info,
@@ -210,7 +209,7 @@ class Page8AR:
             fg_color="#F2F7F9",
             text_color="#1679EF",
         )
-        label3.grid(row=3, column=0, padx=40)
+        label3.grid(row=3, column=0, padx=30)
 
         label4 = CTkLabel(
             master=frm_info,
@@ -219,16 +218,7 @@ class Page8AR:
             fg_color="#F2F7F9",
             text_color="#1679EF",
         )
-        label4.grid(row=4, column=0, padx=40)
-        
-        label_date = CTkLabel(
-            master=frm_info,
-            text=f"{datetime.now():%d-%m-%Y}  /  {datetime.now():%I:%M}",  # Date
-            font=("Arial", 17, "bold"),
-            fg_color="#F2F7F9",
-            text_color="#1679EF",
-        )
-        label_date.grid(row=5, column=0, padx=40)
+        label4.grid(row=4, column=0, padx=30)
 
         frm_info.place(x=230, y=0)
 
