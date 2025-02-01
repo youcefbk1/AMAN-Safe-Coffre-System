@@ -137,8 +137,8 @@ class Page3FR:
         self.frm3.pack(fill=X, side=BOTTOM)
 
     def validate_username(self, username):
-        # Check if the username consists only of numbers and is between 6 to 9 digits long
-        if username.isdigit() and 6 <= len(username) <= 9:
+        # Check if the username consists only of numbers and is exactly 9 digits long
+        if username.isdigit() and len(username) == 9:
             return True
         else:
             return False
@@ -162,28 +162,28 @@ class Page3FR:
         password = self.generate_password()
 
         # Check if the username already exists
-        self.cursor.execute("SELECT id FROM person WHERE username = ?", (entry_text,))
-        existing_user = self.cursor.fetchone()
+        # self.cursor.execute("SELECT id FROM person WHERE username = ?", (entry_text,))
+        # existing_user = self.cursor.fetchone()
 
         # Set all users to inactive first
         self.cursor.execute("UPDATE person SET actif = 0")
 
-        if existing_user:
-            self.cursor.execute(
-                "UPDATE person SET actif = ? WHERE id = ?",
-                (1, existing_user[0]),
-            )
-            self.conn.commit()
-        else:
-            # Insert the new user and set them as active
-            self.cursor.execute(
-                """
-                INSERT INTO person (username, password, actif)
-                VALUES (?, ?, ?)
-                """,
-                (entry_text, password, 1),  # Actif = 1 pour ce nouvel utilisateur
-            )
-            self.conn.commit()
+        # if existing_user:
+        #     self.cursor.execute(
+        #         "UPDATE person SET actif = ? WHERE id = ?",
+        #         (1, existing_user[0]),
+        #     )
+        #     self.conn.commit()
+        # else:
+        # Insert the new user and set them as active
+        self.cursor.execute(
+            """
+            INSERT INTO person (username, password, actif)
+            VALUES (?, ?, ?)
+            """,
+            (entry_text, password, 1),  # Actif = 1 pour ce nouvel utilisateur
+        )
+        self.conn.commit()
 
     def save_and_switch(self):
         # Get the entry text
