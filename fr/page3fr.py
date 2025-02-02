@@ -19,7 +19,7 @@ class Page3FR:
         self.inactivity_timer = None  # Initialize the inactivity timer
         self.setup_gui()
         self.reset_timer()  # Start the inactivity timer
-        
+
     # def show_touch_keyboard(self, event):
     #     os.system("cmd /c TabTip.exe")
 
@@ -28,16 +28,16 @@ class Page3FR:
 
         self.master.title("AMAN")
         self.master.iconbitmap("image/AMAN-LOGO.ico")
-        self.master.geometry("800x480")
-        self.master.minsize(800, 480)
-        self.master.maxsize(800, 480)
+        self.master.geometry("1920x1200")
+        self.master.minsize(1920, 1200)
+        self.master.maxsize(1920, 1200)
         self.master.config(bg="#F2F7F9")
 
-        self.frm1 = Frame(self.master, bg="#1679EF", height=50)
-        self.frm1.pack(fill=X, side=TOP, pady=15)
+        self.frm1 = Frame(self.master, bg="#1679EF", height=100)
+        self.frm1.pack(fill=X, side=TOP, pady=30)
 
         old_image_frm1 = Image.open("image/AMAN-BLEU.png")
-        resized_frm1 = old_image_frm1.resize((60, 50), Image.LANCZOS)
+        resized_frm1 = old_image_frm1.resize((120, 100), Image.LANCZOS)
         self.new_image_frm1 = ImageTk.PhotoImage(resized_frm1)
         self.label1 = Label(
             self.frm1, image=self.new_image_frm1, highlightthickness=0, bd=0
@@ -46,98 +46,101 @@ class Page3FR:
         self.label1.pack(expand=YES)
 
         # Central part (content)
-        self.frm2 = Frame(self.master, bg="#F2F7F9", height=360, width=800)
+        self.frm2 = Frame(self.master, bg="#F2F7F9")
 
         label_msg = Label(
             self.frm2,
             text="Veuillez entrer le code\nde votre carte d'identité biométrique",
-            font=("Arial", 17, "bold"),
+            font=("Arial", 34, "bold"),
             fg="#095CD3",
             bg="#F2F7F9",
         )
-        label_msg.place(x=345, y=20)
+        label_msg.place(x=690, y=40)
 
         # Entry field
         self.entry = CTkEntry(
             master=self.frm2,
-            font=("Arial", 23, "bold"),
+            font=("Arial", 46, "bold"),
             fg_color="#F2F7F9",
             border_width=2,
-            width=365,
+            width=730,
             border_color="#1679EF",
             corner_radius=4,
             text_color="black",
-            height=50,
+            height=100,
         )
-        self.entry.place(x=370, y=90)
+        self.entry.place(x=740, y=180)
         # self.entry.bind("<FocusIn>", self.show_touch_keyboard)
 
         self.error_label = Label(
             self.frm2,
             text="",
-            font=("Arial", 12),
+            font=("Arial", 24),
             fg="red",
             bg="#F2F7F9",
         )
-        self.error_label.place(x=370, y=140)
+        self.error_label.place(x=740, y=280)
 
         self.btn = Button(
             self.frm2,
             text="Inscription",
-            font=("Arial", 20),
+            font=("Arial", 40),
             bg="#1679EF",
             fg="#F2F7F9",
             width=22,
             bd=0,
             command=self.save_and_switch,
         )
-        self.btn.place(x=370, y=200)
+        self.btn.place(x=740, y=400)
 
-        self.btn_srt = Button(
+        self.btn_srt = CTkButton(
             self.frm2,
             text="Sortie",
-            font=("Arial", 15),
-            bg="#1679EF",
-            fg="#F2F7F9",
-            width=7,
-            bd=0,
+            font=("Arial", 40),
+            fg_color="#1679EF",
+            text_color="#F2F7F9",
+            width=200,
+            height=60,
+            border_width=0,
+            corner_radius=3,
             command=self.return_to_main,
         )
-        self.btn_srt.place(x=45, y=320)
+        self.btn_srt.place(x=90, y=600)
 
         image_flch = Image.open("fleche3.png")
-        img_flch = ImageTk.PhotoImage(image_flch)
+        self.resized_flesh = image_flch.resize((100, 100), Image.LANCZOS)
+        img_flch = ImageTk.PhotoImage(self.resized_flesh)
         label_flch = Label(self.frm2, image=img_flch, bg="#F2F7F9")
         label_flch.image = img_flch  # Keep a reference to the image object
-        label_flch.place(x=725, y=194)
+        label_flch.place(x=1430, y=400)
 
         image_flch2 = Image.open("fleche3.png")
         rotated_img = image_flch2.rotate(180)
-        resize = rotated_img.resize((35, 35), Image.LANCZOS)
+        resize = rotated_img.resize((70, 70), Image.LANCZOS)
         img_flch2 = ImageTk.PhotoImage(resize)
         label_flch2 = Label(self.frm2, image=img_flch2, bg="#F2F7F9")
         label_flch2.image = img_flch2  # Keep a reference to the image object
-        label_flch2.place(x=2, y=319)
+        label_flch2.place(x=4, y=595)
 
         image_identite = Image.open("fr/image/identite_fr.png")
-        resize_identite = image_identite.resize((250, 170), Image.LANCZOS)
+        resize_identite = image_identite.resize((500, 340), Image.LANCZOS)
         img_identite = ImageTk.PhotoImage(resize_identite)
         self.label_img = Label(self.frm2, image=img_identite, bg="#F2F7F9")
         self.label_img.image = img_identite  # Keep a reference to the image object
-        self.label_img.place(x=55, y=20)
+        self.label_img.place(x=110, y=40)
 
-        self.frm2.pack()
+        self.frm2.pack(expand=YES, fill=BOTH)
 
-        self.frm3 = Frame(self.master, bg="#1679EF", height=30)
+        self.frm3 = Frame(self.master, bg="#1679EF", height=60)
         date = datetime.now()
-        label_date = Label(
+        self.label_date = Label(
             self.frm3,
             text=f"{date:%m-%d-%Y}  /  {date:%I:%M}",
-            font=("Arial", 12),
+            font=("Arial", 24),
             fg="#F2F7F9",
             bg="#1679EF",
         )
-        label_date.pack(expand=YES)
+        self.label_date.pack(expand=YES)
         self.frm3.pack(fill=X, side=BOTTOM)
 
     def validate_username(self, username):

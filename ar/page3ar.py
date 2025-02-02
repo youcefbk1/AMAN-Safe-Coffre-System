@@ -8,7 +8,6 @@ import random
 import string
 from ar.page4ar import Page4AR
 
-
 class Page3AR:
     def __init__(self, master, main_app, cursor, conn):
         self.master = master
@@ -24,17 +23,17 @@ class Page3AR:
 
         self.master.title("AMAN")
         self.master.iconbitmap("image/AMAN-LOGO.ico")
-        self.master.geometry("800x480")
-        self.master.minsize(800, 480)
-        self.master.maxsize(800, 480)
+        self.master.geometry("1920x1200")
+        self.master.minsize(1920, 1200)
+        self.master.maxsize(1920, 1200)
         self.master.config(bg="#F2F7F9")
 
-        self.frm1 = tk.Frame(self.master, bg="#1679EF", height=50)
-        self.frm1.pack(fill=tk.X, side=tk.TOP, pady=15)
+        self.frm1 = tk.Frame(self.master, bg="#1679EF", height=100)
+        self.frm1.pack(fill=tk.X, side=tk.TOP, pady=30)
 
         # Load and display logo image
         self.old_image_frm1 = Image.open("image/AMAN-BLEU.png")
-        self.resized_frm1 = self.old_image_frm1.resize((60, 50), Image.LANCZOS)
+        self.resized_frm1 = self.old_image_frm1.resize((120, 100), Image.LANCZOS)
         self.new_image_frm1 = ImageTk.PhotoImage(self.resized_frm1)
         self.label1 = tk.Label(
             self.frm1, image=self.new_image_frm1, highlightthickness=0, bd=0
@@ -42,102 +41,103 @@ class Page3AR:
         self.label1.image = self.new_image_frm1  # Keep a reference to the image object
         self.label1.pack(expand=tk.YES)
 
-        self.frm2 = tk.Frame(self.master, bg="#F2F7F9", height=360, width=800)
+        self.frm2 = tk.Frame(self.master, bg="#F2F7F9")
 
         # Display message
         self.label_msg = tk.Label(
             self.frm2,
             text="الرجاء إدخال رقم بطاقة الهوية البيومترية الخاصة بك",
-            font=("Arial", 18, "bold"),
+            font=("Arial", 36, "bold"),
             fg="#095CD3",
             bg="#F2F7F9",
         )
-        self.label_msg.place(x=345, y=25)
+        self.label_msg.place(x=690, y=50)
 
         # Entry field
         self.entry = CTkEntry(
             master=self.frm2,
-            font=("Arial", 23, "bold"),
+            font=("Arial", 46, "bold"),
             fg_color="#F2F7F9",
             border_width=2,
-            width=365,
+            width=730,
             border_color="#1679EF",
             corner_radius=4,
             text_color="black",
-            height=50,
+            height=100,
         )
-        self.entry.place(x=370, y=90)
+        self.entry.place(x=740, y=180)
 
         self.error_label = Label(
             self.frm2,
             text="",
-            font=("Arial", 12),
+            font=("Arial", 24),
             fg="red",
             bg="#F2F7F9",
         )
-        self.error_label.place(x=370, y=140)
+        self.error_label.place(x=740, y=280)
 
         # Register button
         self.btn = CTkButton(
             master=self.frm2,
             text="تسجيل",
-            font=("Arial", 27),
+            font=("Arial", 54),
             fg_color="#1679EF",
             text_color="#F2F7F9",
-            width=355,
-            height=50,
+            width=710,
+            height=100,
             border_width=0,
             corner_radius=4,
             command=self.save_and_switch,
         )
-        self.btn.place(x=375, y=200)
+        self.btn.place(x=750, y=400)
 
         # Exit button
         self.btn_srt = CTkButton(
             master=self.frm2,
             text="خروج",
-            font=("Arial", 20),
+            font=("Arial", 40),
             fg_color="#1679EF",
             text_color="#F2F7F9",
-            width=100,
-            height=30,
+            width=200,
+            height=60,
             border_width=0,
             corner_radius=3,
             command=self.return_to_main,
         )
-        self.btn_srt.place(x=40, y=320)
+        self.btn_srt.place(x=80, y=600)
 
         # Arrows
         self.image_flch = Image.open("image/fleche3.png")
-        self.img_flch = ImageTk.PhotoImage(self.image_flch)
+        self.resized_flesh = self.image_flch.resize((100, 100), Image.LANCZOS)
+        self.img_flch = ImageTk.PhotoImage(self.resized_flesh)
         self.label_flch = tk.Label(self.frm2, image=self.img_flch, bg="#F2F7F9")
         self.label_flch.image = self.img_flch  # Keep a reference to the image object
-        self.label_flch.place(x=730, y=194)
+        self.label_flch.place(x=1460, y=395)
 
         self.image_flch2 = Image.open("image/fleche3.png")
         self.rotated_img = self.image_flch2.rotate(180)
-        self.resize = self.rotated_img.resize((35, 35), Image.LANCZOS)
+        self.resize = self.rotated_img.resize((70, 70), Image.LANCZOS)
         self.img_flch2 = ImageTk.PhotoImage(self.resize)
         self.label_flch2 = tk.Label(self.frm2, image=self.img_flch2, bg="#F2F7F9")
         self.label_flch2.image = self.img_flch2  # Keep a reference to the image object
-        self.label_flch2.place(x=1, y=316)
+        self.label_flch2.place(x=2, y=595)
 
         # Identity image
         self.image_identite = Image.open("ar/image/identite_ar.png")
-        self.resize_identite = self.image_identite.resize((250, 170), Image.LANCZOS)
+        self.resize_identite = self.image_identite.resize((500, 340), Image.LANCZOS)
         self.img_identite = ImageTk.PhotoImage(self.resize_identite)
         self.label_img = tk.Label(self.frm2, image=self.img_identite, bg="#F2F7F9")
         self.label_img.image = self.img_identite  # Keep a reference to the image object
-        self.label_img.place(x=55, y=20)
+        self.label_img.place(x=110, y=40)
 
-        self.frm2.pack()
+        self.frm2.pack(expand=tk.YES, fill=tk.BOTH)
 
-        self.frm3 = tk.Frame(self.master, bg="#1679EF", height=30)
+        self.frm3 = tk.Frame(self.master, bg="#1679EF", height=60)
         self.date = datetime.now()
         self.label2 = tk.Label(
             self.frm3,
             text=f"{self.date:%d-%m-%Y}  /  {self.date:%I:%M}",
-            font=("Arial", 12),
+            font=("Arial", 24),
             fg="#F2F7F9",
             bg="#1679EF",
         )
