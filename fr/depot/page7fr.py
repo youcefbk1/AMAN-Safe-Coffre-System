@@ -72,6 +72,7 @@ class Page7FR:
                     print("Signal received: Payment successful.")
                     self.increment_ticket()  # Increment the ticket number
                     self.paid()  # Mark the user as paid
+                    self.save_to_person_backup()  # Save user data to person_backup
                     self.switch_to_page8fr()
                 else:
                     # Retry after 500ms
@@ -93,6 +94,27 @@ class Page7FR:
             print("User marked as paid.")
         except Exception as e:
             print(f"Error marking user as paid: {e}")
+            
+    def save_to_person_backup(self):
+        """
+        Saves the active user's data to the 'person_backup' table before deleting the user, without saving the 'actif' column.
+        """
+        try:
+            # Fetch the active user's data excluding the 'actif' column
+            self.cursor.execute("SELECT id, username, password, casier, paid, price, time FROM person WHERE paid = 1 and actif = 1")
+            result = self.cursor.fetchone()
+            if result:
+                # Insert the data into the 'person_backup' table
+                self.cursor.execute(
+                    "INSERT INTO person_backup (id, username, password, casier, paid, price, time) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    result,
+                )
+                self.conn.commit()
+                print("Data saved to person_backup table.")
+            else:
+                print("No paid active user found.")
+        except Exception as e:
+            print(f"Error saving data to person_backup table: {e}")
 
     def send_data_to_raspberry(self):
         """
