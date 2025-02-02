@@ -22,18 +22,21 @@ class Page9FR:
         self.setup_gui()
         self.reset_timer()  # Start the inactivity timer
 
-    def start_raspberry_script(self):
+    def start_raspberry_script(self, username, password):
         """
         Reads the casier value from the 'person' table and starts the corresponding
         Raspberry Pi script remotely using SSH.
         """
         try:
-            # Fetch the casier ID from the active user in the database
-            self.cursor.execute("SELECT casier FROM person WHERE actif = ?", (1,))
+            # Fetch the casier ID from the user in the database
+            self.cursor.execute(
+                "SELECT casier FROM person WHERE username = ? AND password = ?",
+                (username, password),
+            )
             result = self.cursor.fetchone()
 
             if not result:
-                print("No active user found or casier ID missing.")
+                print("No user found or casier ID missing.")
                 return
 
             casier_id = result[0]  # Get the casier ID
@@ -278,7 +281,7 @@ class Page9FR:
                 self.lbl_error.configure(text="")  # Efface l'erreur s'il y en avait une
                 print("Succès", "Connexion réussie.")
                 # Start Raspberry Pi script remotely via SSH
-                self.start_raspberry_script()
+                self.start_raspberry_script(username, password)
                 self.switch_to_page10fr()
                 self.delete_user()
             else:
@@ -297,13 +300,15 @@ class Page9FR:
         """
         try:
             self.cursor.execute("DELETE FROM person WHERE actif = 1")
+            # Delete also from person where username = username and password = password
+            self.cursor.execute(
+                "DELETE FROM person WHERE username = ? AND password = ?",
+                (self.active_username, self.entry_password.get().strip()),
+            )
             self.conn.commit()
             print("Utilisateur supprimé avec succès.")
         except Exception as e:
             print(f"Erreur lors de la suppression de l'utilisateur : {e}")
-    
-
-
 
     def switch_to_page10fr(self):
         self.reset_timer()  # Reset the timer on interaction

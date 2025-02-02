@@ -19,6 +19,9 @@ class Page3FR:
         self.inactivity_timer = None  # Initialize the inactivity timer
         self.setup_gui()
         self.reset_timer()  # Start the inactivity timer
+        
+    # def show_touch_keyboard(self, event):
+    #     os.system("cmd /c TabTip.exe")
 
     def setup_gui(self):
         locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
@@ -67,6 +70,7 @@ class Page3FR:
             height=50,
         )
         self.entry.place(x=370, y=90)
+        # self.entry.bind("<FocusIn>", self.show_touch_keyboard)
 
         self.error_label = Label(
             self.frm2,

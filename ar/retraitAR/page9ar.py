@@ -21,14 +21,17 @@ class Page9AR:
         self.setup_gui()
         self.reset_timer()  # Start the inactivity timer
 
-    def start_raspberry_script(self):
+    def start_raspberry_script(self, username, password):
         """
         Reads the casier value from the 'person' table and starts the corresponding
         Raspberry Pi script remotely using SSH.
         """
         try:
-            # Fetch the casier ID from the active user in the database
-            self.cursor.execute("SELECT casier FROM person WHERE actif = ?", (1,))
+            # Fetch the casier ID from the user in the database
+            self.cursor.execute(
+                "SELECT casier FROM person WHERE username = ? AND password = ?",
+                (username, password),
+            )
             result = self.cursor.fetchone()
 
             if not result:
@@ -275,7 +278,7 @@ class Page9AR:
                 self.lbl_error.configure(text="")  # Efface l'erreur s'il y en avait une
                 print("Succès", "Connexion réussie.")
                 # Start Raspberry Pi script remotely via SSH
-                self.start_raspberry_script()
+                self.start_raspberry_script(username, password)
                 self.switch_to_page10ar()
                 self.delete_user()
             else:
@@ -294,6 +297,8 @@ class Page9AR:
         """
         try:
             self.cursor.execute("DELETE FROM person WHERE actif = 1")
+            # Delete also from person where username = username and password = password
+            self.cursor.execute("DELETE FROM person WHERE username = ? AND password = ?", (self.active_username, self.entry_password.get().strip()))
             self.conn.commit()
             print("Utilisateur supprimé avec succès.")
         except Exception as e:
