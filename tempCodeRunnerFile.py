@@ -1,1 +1,1 @@
-        self.master.overrideredirect(True)
+scale this app to 1920x 1200 and preserve the aspect ratio and resize the object according to the new display

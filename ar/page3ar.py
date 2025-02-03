@@ -29,7 +29,7 @@ class Page3AR:
         self.master.config(bg="#F2F7F9")
 
         self.frm1 = tk.Frame(self.master, bg="#1679EF", height=100)
-        self.frm1.pack(fill=tk.X, side=tk.TOP, pady=30)
+        self.frm1.pack(fill=tk.X, side=tk.TOP)
 
         # Load and display logo image
         self.old_image_frm1 = Image.open("image/AMAN-BLEU.png")
@@ -112,7 +112,7 @@ class Page3AR:
         self.img_flch = ImageTk.PhotoImage(self.resized_flesh)
         self.label_flch = tk.Label(self.frm2, image=self.img_flch, bg="#F2F7F9")
         self.label_flch.image = self.img_flch  # Keep a reference to the image object
-        self.label_flch.place(x=1460, y=395)
+        self.label_flch.place(x=1440, y=395)
 
         self.image_flch2 = Image.open("image/fleche3.png")
         self.rotated_img = self.image_flch2.rotate(180)

@@ -34,7 +34,7 @@ class Page3FR:
         self.master.config(bg="#F2F7F9")
 
         self.frm1 = Frame(self.master, bg="#1679EF", height=100)
-        self.frm1.pack(fill=X, side=TOP, pady=30)
+        self.frm1.pack(fill=X, side=TOP)
 
         old_image_frm1 = Image.open("image/AMAN-BLEU.png")
         resized_frm1 = old_image_frm1.resize((120, 100), Image.LANCZOS)

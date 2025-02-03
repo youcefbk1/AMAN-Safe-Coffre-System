@@ -6,7 +6,6 @@ import locale
 from fr.depot.page5fr import Page5FR
 from fr.retrait.page9fr import Page9FR
 
-
 class Page4FR:
     def __init__(self, master, main_app, cursor, conn):
         self.master = master
@@ -24,18 +23,18 @@ class Page4FR:
         # Initialize main window
         self.master.title("AMAN")
         self.master.iconbitmap("image/AMAN-LOGO.ico")
-        self.master.geometry("800x480")
-        self.master.minsize(800, 480)
-        self.master.maxsize(800, 480)
+        self.master.geometry("1920x1200")
+        self.master.minsize(1920, 1200)
+        self.master.maxsize(1920, 1200)
         self.master.config(bg="#F2F7F9")
 
         # Top blue bar
-        self.frm1 = Frame(self.master, bg="#1679EF", height=50)
-        self.frm1.pack(fill=X, side=TOP, pady=15)
+        self.frm1 = Frame(self.master, bg="#1679EF", height=100)
+        self.frm1.pack(fill=X, side=TOP)
 
         # AMAN logo in top bar
         old_image_frm1 = Image.open("image/AMAN-BLEU.png")
-        resized_frm1 = old_image_frm1.resize((60, 50), Image.LANCZOS)
+        resized_frm1 = old_image_frm1.resize((120, 100), Image.LANCZOS)
         self.new_image_frm1 = ImageTk.PhotoImage(resized_frm1)
         self.label1 = Label(
             self.frm1, image=self.new_image_frm1, highlightthickness=0, bd=0
@@ -44,90 +43,91 @@ class Page4FR:
         self.label1.pack(expand=YES)
 
         # Central part (content)
-        self.frm2 = Frame(self.master, bg="#F2F7F9", height=360, width=800)
+        self.frm2 = Frame(self.master, bg="#F2F7F9")
 
         # Message at the top
         label_msg = Label(
             self.frm2,
             text="Merci de bien vouloir choisir parmi\n les options suivantes en sélectionnant votre préférence",
-            font=("Arial", 18, "bold"),
+            font=("Arial", 36, "bold"),
             fg="#095CD3",
             bg="#F2F7F9",
         )
-        label_msg.place(x=60, y=10)
+        label_msg.place(x=120, y=20)
 
         # Buttons
         self.btn1 = CTkButton(
             self.frm2,
             text="Dépôt",
-            font=("Arial", 27),
+            font=("Arial", 54),
             fg_color="#1679EF",
             text_color="#F2F7F9",
-            width=350,
-            height=50,
+            width=700,
+            height=100,
             border_width=0,
             corner_radius=4,
             command=self.switch_to_page5fr,
         )
-        self.btn1.place(x=385, y=130)
+        self.btn1.place(x=770, y=260)
 
         self.btn2 = CTkButton(
             master=self.frm2,
             text="Retrait",
-            font=("Arial", 27),
+            font=("Arial", 54),
             fg_color="#1679EF",
             text_color="#F2F7F9",
-            width=350,
-            height=50,
+            width=700,
+            height=100,
             border_width=0,
             corner_radius=4,
             command=self.switch_to_page9fr,
         )
-        self.btn2.place(x=385, y=230)
+        self.btn2.place(x=770, y=460)
 
         # Arrow images
         image_flch = Image.open("image/fleche3.png")
-        img_flch = ImageTk.PhotoImage(image_flch)
+        
+        img_flch = ImageTk.PhotoImage(image_flch.resize((100, 100), Image.LANCZOS))
         label_flch = Label(self.frm2, image=img_flch, bg="#F2F7F9")
         label_flch.image = img_flch  # Keep a reference to the image object
-        label_flch.place(x=735, y=224)
+        label_flch.place(x=1450, y=460)
 
         label_flch2 = Label(self.frm2, image=img_flch, bg="#F2F7F9")
         label_flch2.image = img_flch  # Keep a reference to the image object
-        label_flch2.place(x=735, y=123)
+        label_flch2.place(x=1450, y=260)
 
         # Exit button
         self.btn_srt = CTkButton(
             master=self.frm2,
             text="Sortie",
-            font=("Arial", 20),
+            font=("Arial", 40),
             fg_color="#1679EF",
             text_color="#F2F7F9",
-            width=100,
-            height=30,
+            width=200,
+            height=60,
             border_width=0,
             corner_radius=3,
             command=self.return_to_main,
         )
-        self.btn_srt.place(x=40, y=320)
+        self.btn_srt.place(x=80, y=640)
 
         # Arrow image for exit button
         rotated_img = image_flch.rotate(180)
-        resize = rotated_img.resize((35, 35), Image.LANCZOS)
+        resize = rotated_img.resize((70, 70), Image.LANCZOS)
         img_flch_srt = ImageTk.PhotoImage(resize)
         label_flch_srt = Label(self.frm2, image=img_flch_srt, bg="#F2F7F9")
         label_flch_srt.image = img_flch_srt  # Keep a reference to the image object
-        label_flch_srt.place(x=1, y=316)
+        label_flch_srt.place(x=2, y=632)
 
-        self.frm2.pack()
+        self.frm2.pack(expand=YES,  fill=BOTH)
 
         # Bottom blue bar
-        self.frm3 = Frame(self.master, bg="#1679EF", height=30)
+        self.frm3 = Frame(self.master, bg="#1679EF", height=60)
         date = datetime.now()
         label2 = Label(
             self.frm3,
             text=f"{date:%d-%m-%Y}  /  {date:%I:%M}",
-            font=("Arial", 12),
+            font=("Arial", 24),
             fg="#F2F7F9",
             bg="#1679EF",
         )

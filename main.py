@@ -6,13 +6,25 @@ import locale
 import sqlite3
 from page2 import LanguageInterface
 
+# scale this app to 1920x 1200 and preserve the aspect ratio and resize the object according to the new display
+
 
 class MainApplication:
 
     def __init__(self, master):
         self.master = master
+        # # Enable full-screen mode and remove window decorations
+        # self.master.attributes("-fullscreen", True)  # Start in full-screen mode
+        # self.master.resizable(False, False)  # Disable window resizing
+        # self.master.config(bg="#F2F7F9")
 
+        # Bind Escape key to exit full-screen mode
+        self.master.bind("<Escape>", self.exit_fullscreen)
         self.setup_gui()
+
+    def exit_fullscreen(self, event=None):
+         # Exit the app 
+         os._exit(0)
 
     def setup_gui(self):
         # Met la localisation suivant la France permet d'avoir la langue française pour la date
@@ -53,7 +65,7 @@ class MainApplication:
 
         # Bande bleue d'en haut avec logo AMAN
         self.frm1 = Frame(self.master, bg="#1679EF", height=100)
-        self.frm1.pack(fill=X, side=TOP, pady=30)
+        self.frm1.pack(fill=X, side=TOP)
 
         self.old_image_frm1 = Image.open("image/AMAN-BLEU.png")
         self.resized_frm1 = self.old_image_frm1.resize((120, 100), Image.LANCZOS)

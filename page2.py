@@ -29,7 +29,7 @@ class LanguageInterface:
         self.master.config(bg="#F2F7F9")
 
         self.frm1 = Frame(self.master, bg="#1679EF", height=100)
-        self.frm1.pack(fill=X, side=TOP, pady=30)
+        self.frm1.pack(fill=X, side=TOP)
 
         self.old_image_frm1 = Image.open("image/AMAN-BLEU.png")
         self.resized_frm1 = self.old_image_frm1.resize((120, 100), Image.LANCZOS)
