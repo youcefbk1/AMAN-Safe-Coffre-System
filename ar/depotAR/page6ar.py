@@ -7,7 +7,6 @@ import arabic_reshaper
 import bidi.algorithm
 from ar.depotAR.page7ar import Page7AR
 
-
 class Page6AR:
     def __init__(self, master, main_app, cursor, conn):
         self.master = master
@@ -23,16 +22,16 @@ class Page6AR:
         locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
         self.master.title("AMAN")
         self.master.iconbitmap("image/AMAN-LOGO.ico")
-        self.master.geometry("800x480")
+        self.master.geometry("1920x1200")
         self.master.config(bg="#F2F7F9")
 
         # Bandeau bleu en haut
-        self.frm1 = Frame(self.master, bg="#1679EF", height=50)
-        self.frm1.pack(fill=X, side=TOP, pady=15)
+        self.frm1 = Frame(self.master, bg="#1679EF", height=100)
+        self.frm1.pack(fill=X, side=TOP)
 
         # Logo
         old_image_frm1 = Image.open("image/AMAN-BLEU.png")
-        resized_frm1 = old_image_frm1.resize((60, 50), Image.LANCZOS)
+        resized_frm1 = old_image_frm1.resize((120, 100), Image.LANCZOS)
         self.new_image_frm1 = ImageTk.PhotoImage(resized_frm1)
         self.label1 = Label(
             self.frm1, image=self.new_image_frm1, highlightthickness=0, bd=0
@@ -42,16 +41,16 @@ class Page6AR:
 
         # Partie central (contenu)
 
-        self.frm2 = Frame(self.master, bg="#F2F7F9", height=360, width=800)
+        self.frm2 = Frame(self.master, bg="#F2F7F9")
 
         label_msg = Label(
             self.frm2,
             text="الرجاء تحديد مدة التخزين المطلوبة",
-            font=("Arial", 22, "bold"),
+            font=("Arial", 44, "bold"),
             fg="#095CD3",
             bg="#F2F7F9",
         )
-        label_msg.place(x=245, y=3)
+        label_msg.place(x=735, y=6)
 
         # partie bouton
         # bouton droit
@@ -59,24 +58,24 @@ class Page6AR:
         self.btns = []
         for i, (x, y) in enumerate(
             [
-                (475, 60),
-                (475, 140),
-                (475, 220),
-                (475, 300),
-                (66, 60),
-                (66, 140),
-                (66, 220),
-                (66, 300),
+                (940, 120),
+                (940, 280),
+                (940, 440),
+                (940, 600),
+                (90, 120),
+                (90, 280),
+                (90, 440),
+                (90, 600),
             ]
         ):
             btn = CTkButton(
                 master=self.frm2,
                 text="خروج" if i == 7 else f"Bouton {i+1}",
-                font=("Arial", 26),
+                font=("Arial", 52),
                 fg_color="#1679EF",
                 text_color="#F2F7F9",
-                width=260,
-                height=45,
+                width=520,
+                height=90,
                 border_width=0,
                 corner_radius=4,
                 command=(
@@ -93,50 +92,50 @@ class Page6AR:
         # Ajout des flèches
         # partie flech droite
         image_flch = Image.open("image/fleche10.png")
-        self.img_flch = ImageTk.PhotoImage(image_flch)
+        self.img_flch = ImageTk.PhotoImage(image_flch.resize((50, 50), Image.LANCZOS))
 
         self.label_flch1 = Label(self.frm2, image=self.img_flch, bg="#F2F7F9")
-        self.label_flch1.place(x=750, y=63)
+        self.label_flch1.place(x=1480, y=136)
 
         self.label_flch2 = Label(self.frm2, image=self.img_flch, bg="#F2F7F9")
-        self.label_flch2.place(x=750, y=144)
+        self.label_flch2.place(x=1480, y=298)
 
         self.label_flch3 = Label(self.frm2, image=self.img_flch, bg="#F2F7F9")
-        self.label_flch3.place(x=750, y=224)
+        self.label_flch3.place(x=1480, y=458)
 
         self.label_flch4 = Label(self.frm2, image=self.img_flch, bg="#F2F7F9")
-        self.label_flch4.place(x=750, y=305)
+        self.label_flch4.place(x=1480, y=620)
 
         # rotated image
         image_old = Image.open("image/fleche10.png")
         image_rota = image_old.rotate(180)
-        self.image_final = ImageTk.PhotoImage(image_rota)
+        self.image_final = ImageTk.PhotoImage(image_rota.resize((50, 50), Image.LANCZOS))
 
         # partie fleche gauche
         self.label_flch5 = Label(self.frm2, image=self.image_final, bg="#F2F7F9")
-        self.label_flch5.place(x=9, y=63)
+        self.label_flch5.place(x=18, y=140)
 
         self.label_flch6 = Label(self.frm2, image=self.image_final, bg="#F2F7F9")
-        self.label_flch6.place(x=9, y=144)
+        self.label_flch6.place(x=18, y=302)
 
         self.label_flch7 = Label(self.frm2, image=self.image_final, bg="#F2F7F9")
-        self.label_flch7.place(x=9, y=224)
+        self.label_flch7.place(x=18, y=462)
 
         self.label_flch8 = Label(self.frm2, image=self.image_final, bg="#F2F7F9")
-        self.label_flch8.place(x=9, y=305)
+        self.label_flch8.place(x=18, y=624)
 
         # Charger les prix basés sur le casier
         self.load_prices()
 
-        self.frm2.pack()
+        self.frm2.pack(expand=YES, fill=BOTH)   
 
         # bande bleu BOTTOM
-        self.frm3 = Frame(self.master, bg="#1679EF", height=30)
+        self.frm3 = Frame(self.master, bg="#1679EF", height=60)
         date = datetime.now()
         label2 = Label(
             self.frm3,
             text=f"{date:%d-%m-%Y}  /  {date:%I:%M}",
-            font=("Arial", 12),
+            font=("Arial", 24),
             fg="#F2F7F9",
             bg="#1679EF",
         )

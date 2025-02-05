@@ -32,7 +32,7 @@ class Page5FR:
         self.master.config(bg="#F2F7F9")
 
         self.frm1 = Frame(self.master, bg="#1679EF", height=100)
-        self.frm1.pack(fill=X, side=TOP, pady=30)
+        self.frm1.pack(fill=X, side=TOP)
 
         # partie redimentionnage et creatin image logo h'en haut(AMAN BLANC)
         old_image_frm1 = Image.open("image/AMAN-BLEU.png")  # importe l'image image
@@ -146,7 +146,7 @@ class Page5FR:
             corner_radius=3,
             command=self.return_to_main,
         )
-        btn_srt.place(x=80, y=620)
+        btn_srt.place(x=80, y=640)
 
         image_flch_srt = Image.open("image/fleche3.png")
         rotated_img = image_flch_srt.rotate(180)
@@ -154,7 +154,7 @@ class Page5FR:
         self.img_flch_srt = ImageTk.PhotoImage(resize)
         self.label_flch_srt = Label(self.frm2, image=self.img_flch_srt, bg="#F2F7F9")
         self.label_flch_srt.image = self.img_flch_srt
-        self.label_flch_srt.place(x=2, y=612)
+        self.label_flch_srt.place(x=2, y=632)
 
         self.frm2.pack(expand=YES, fill=BOTH)
 
