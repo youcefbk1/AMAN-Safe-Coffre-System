@@ -20,13 +20,19 @@ class Page3FR:
         self.setup_gui()
         self.reset_timer()  # Start the inactivity timer
 
-    # def show_touch_keyboard(self, event):
-    #     os.system("cmd /c TabTip.exe")
+    def open_touch_keyboard(self, event=None):
+        # Open the touch keyboard on Windows from C:\Program Files\Common Files\microsoft shared\ink\TabTip.exe
+
+        os.system('"C:\\Program Files\\Common Files\\microsoft shared\\ink\\TabTip.exe"')
+        print("success keyboard")
+        
+    
 
     def setup_gui(self):
         locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
 
         self.master.title("AMAN")
+
         self.master.iconbitmap("image/AMAN-LOGO.ico")
         self.master.geometry("1920x1200")
         self.master.minsize(1920, 1200)
@@ -70,7 +76,7 @@ class Page3FR:
             height=100,
         )
         self.entry.place(x=740, y=180)
-        # self.entry.bind("<FocusIn>", self.show_touch_keyboard)
+        self.entry.bind("<FocusIn>", lambda event: self.open_touch_keyboard())
 
         self.error_label = Label(
             self.frm2,

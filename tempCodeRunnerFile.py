@@ -1,1 +1,3 @@
-scale this app to 1920x 1200 and preserve the aspect ratio and resize the object according to the new display
+        # self.master.attributes("-fullscreen", True)  # Start in full-screen mode
+        # self.master.resizable(False, False)  # Disable window resizing
+        # self.master.config(bg="#F2F7F9")

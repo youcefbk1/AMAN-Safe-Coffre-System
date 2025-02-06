@@ -7,6 +7,7 @@ import locale
 import random
 import string
 from ar.page4ar import Page4AR
+import os
 
 class Page3AR:
     def __init__(self, master, main_app, cursor, conn):
@@ -17,6 +18,16 @@ class Page3AR:
         self.inactivity_timer = None  # Initialize the inactivity timer
         self.setup_gui()
         self.reset_timer()  # Start the inactivity timer
+
+        # Open the touch keyboard on Windows from C:\Program Files\Common Files\microsoft shared\ink\TabTip.exe
+
+    def open_touch_keyboard(self, event=None):
+        # Open the touch keyboard on Windows from C:\Program Files\Common Files\microsoft shared\ink\TabTip.exe
+
+        os.system(
+            '"C:\\Program Files\\Common Files\\microsoft shared\\ink\\TabTip.exe"'
+        )
+        print("success keyboard")
 
     def setup_gui(self):
         locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
@@ -66,6 +77,7 @@ class Page3AR:
             height=100,
         )
         self.entry.place(x=740, y=180)
+        self.entry.bind("<FocusIn>", lambda event: self.open_touch_keyboard())
 
         self.error_label = Label(
             self.frm2,
