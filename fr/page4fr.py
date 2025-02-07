@@ -6,6 +6,7 @@ import locale
 from fr.depot.page5fr import Page5FR
 from fr.retrait.page9fr import Page9FR
 
+
 class Page4FR:
     def __init__(self, master, main_app, cursor, conn):
         self.master = master
@@ -86,7 +87,7 @@ class Page4FR:
 
         # Arrow images
         image_flch = Image.open("image/fleche3.png")
-        
+
         img_flch = ImageTk.PhotoImage(image_flch.resize((100, 100), Image.LANCZOS))
         label_flch = Label(self.frm2, image=img_flch, bg="#F2F7F9")
         label_flch.image = img_flch  # Keep a reference to the image object
@@ -119,7 +120,7 @@ class Page4FR:
         label_flch_srt.image = img_flch_srt  # Keep a reference to the image object
         label_flch_srt.place(x=2, y=632)
 
-        self.frm2.pack(expand=YES,  fill=BOTH)
+        self.frm2.pack(expand=YES, fill=BOTH)
 
         # Bottom blue bar
         self.frm3 = Frame(self.master, bg="#1679EF", height=60)

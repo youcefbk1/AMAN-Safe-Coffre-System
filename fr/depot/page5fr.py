@@ -6,6 +6,7 @@ import locale
 from fr.depot.page6fr import Page6FR
 import paramiko
 
+
 class Page5FR:
     def __init__(self, master, main_app, cursor, conn):
         self.master = master
@@ -18,7 +19,7 @@ class Page5FR:
         self.inactivity_timer = None  # Initialize the inactivity timer
         self.setup_gui()
         self.reset_timer()  # Start the inactivity timer
-        
+
     def setup_gui(self):
         # Set French locale for date
         locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
@@ -61,7 +62,7 @@ class Page5FR:
         lbl_msg.place(x=200, y=6)
 
         # diagramme
-        img_diag = Image.open("fr/image/diagramme4.png")
+        img_diag = Image.open("image/diagramme4.png")
         # resized_diag = img_diag.resize((800, 600), Image.LANCZOS)
         self.image_diag = ImageTk.PhotoImage(img_diag.resize((600, 450), Image.LANCZOS))
         self.lbl_diag = Label(self.frm2, image=self.image_diag, bg="#F2F7F9", bd=0)
@@ -193,7 +194,6 @@ class Page5FR:
 
         except Exception as e:
             print(f"Error starting Raspberry Pi script: {e}")
-
 
     def switch_to_page6fr(self, volume):
         self.reset_timer()  # Reset the timer on interaction

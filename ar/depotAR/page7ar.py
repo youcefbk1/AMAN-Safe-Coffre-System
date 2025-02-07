@@ -8,6 +8,7 @@ import bidi.algorithm
 import serial
 from ar.depotAR.page8ar import Page8AR
 
+
 class Page7AR:
     def __init__(
         self,
@@ -155,8 +156,10 @@ class Page7AR:
         label_price.grid(row=1, column=0)
 
         # image fleche
-        img_flch = Image.open("fr/image/flech_bas.png")
-        self.img_flch_final = ImageTk.PhotoImage(img_flch.resize((170, 170), Image.LANCZOS))
+        img_flch = Image.open("image/flech_bas.png")
+        self.img_flch_final = ImageTk.PhotoImage(
+            img_flch.resize((170, 170), Image.LANCZOS)
+        )
 
         self.label_flch = CTkLabel(
             master=self.frm2, fg_color="#1679EF", image=self.img_flch_final, text=None
@@ -164,7 +167,7 @@ class Page7AR:
         self.label_flch.place(x=240, y=210)
 
         self.frm_msg.place(x=440, y=100)
-        self.frm2.pack(expand=YES,  fill=BOTH)
+        self.frm2.pack(expand=YES, fill=BOTH)
 
         btn_srt = CTkButton(
             master=self.frm2,
@@ -230,8 +233,8 @@ class Page7AR:
                 data = self.uart.readline().decode("utf-8").strip()
                 if data == "done":
                     print("Signal received: Payment successful.")
-                    self.increment_ticket() # Increment the ticket number
-                    self.paid() # Mark the user as paid
+                    self.increment_ticket()  # Increment the ticket number
+                    self.paid()  # Mark the user as paid
                     self.save_to_person_backup()
                     self.switch_to_page8ar()
                 else:

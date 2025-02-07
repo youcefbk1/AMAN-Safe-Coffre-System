@@ -4,6 +4,7 @@ from PIL import Image, ImageTk
 from datetime import datetime
 import locale
 
+
 class Page10FR:
     def __init__(self, master, main_app, cursor, conn):
         self.master = master
@@ -42,7 +43,6 @@ class Page10FR:
         # Partie central (contenu)
 
         self.frm2 = Frame(self.master, bg="#F2F7F9")
-
 
         lbl_msg = CTkLabel(
             master=self.frm2,

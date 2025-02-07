@@ -104,7 +104,9 @@ class Page6FR:
         # rotated image
         image_old = Image.open("image/fleche10.png")
         image_rota = image_old.rotate(180)
-        self.image_final = ImageTk.PhotoImage(image_rota.resize((50, 50), Image.LANCZOS))
+        self.image_final = ImageTk.PhotoImage(
+            image_rota.resize((50, 50), Image.LANCZOS)
+        )
 
         # partie fleche gauche
         self.label_flch5 = Label(self.frm2, image=self.image_final, bg="#F2F7F9")

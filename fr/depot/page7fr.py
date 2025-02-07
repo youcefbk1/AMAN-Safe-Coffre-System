@@ -84,7 +84,7 @@ class Page7FR:
             border_width=2,
             border_color="#1679EF",
             hover=None,
-            font=("Arial", 50)  # Specify the font here
+            font=("Arial", 50),  # Specify the font here
         )
         box1.grid(row=0, column=0, padx=1, pady=1)
 
@@ -151,8 +151,10 @@ class Page7FR:
         label_price.grid(row=1, column=0)
 
         # image fleche
-        img_flch = Image.open("fr/image/flech_bas.png")
-        self.img_flch_final = ImageTk.PhotoImage(img_flch.resize((170, 170), Image.LANCZOS))
+        img_flch = Image.open("image/flech_bas.png")
+        self.img_flch_final = ImageTk.PhotoImage(
+            img_flch.resize((170, 170), Image.LANCZOS)
+        )
 
         self.label_flch = CTkLabel(
             master=self.frm2, fg_color="#1679EF", image=self.img_flch_final, text=None
@@ -253,7 +255,9 @@ class Page7FR:
         """
         try:
             # Fetch the active user's data excluding the 'actif' column
-            self.cursor.execute("SELECT id, username, password, casier, paid, price, time FROM person WHERE paid = 1 and actif = 1")
+            self.cursor.execute(
+                "SELECT id, username, password, casier, paid, price, time FROM person WHERE paid = 1 and actif = 1"
+            )
             result = self.cursor.fetchone()
             if result:
                 # Insert the data into the 'person_backup' table

@@ -9,6 +9,7 @@ import string
 from ar.page4ar import Page4AR
 import os
 
+
 class Page3AR:
     def __init__(self, master, main_app, cursor, conn):
         self.master = master
@@ -135,7 +136,7 @@ class Page3AR:
         self.label_flch2.place(x=2, y=595)
 
         # Identity image
-        self.image_identite = Image.open("ar/image/identite_ar.png")
+        self.image_identite = Image.open("image/identite_ar.png")
         self.resize_identite = self.image_identite.resize((500, 340), Image.LANCZOS)
         self.img_identite = ImageTk.PhotoImage(self.resize_identite)
         self.label_img = tk.Label(self.frm2, image=self.img_identite, bg="#F2F7F9")
@@ -211,9 +212,7 @@ class Page3AR:
         # Validate the username
         if not self.validate_username(entry_text):
             # Display an error message in the interface
-            self.error_label.config(
-            text="يجب أن يتكون اسم المستخدم من 9 أرقام"
-            )
+            self.error_label.config(text="يجب أن يتكون اسم المستخدم من 9 أرقام")
             return
         # Save data to the database
         self.save_to_database()

@@ -7,6 +7,7 @@ import locale
 import paramiko
 from ar.depotAR.page6ar import Page6AR
 
+
 class Page5AR:
     def __init__(self, master, main_app, cursor, conn):
         self.master = master
@@ -54,8 +55,10 @@ class Page5AR:
         lbl_msg.place(relx=0.5, y=40, anchor=CENTER)
 
         # diagramme
-        img_diag = Image.open("ar/image/diagramme4.png")
-        resized_diag = img_diag.resize((img_diag.width * 2, img_diag.height * 2), Image.LANCZOS)
+        img_diag = Image.open("image/diagramme4.png")
+        resized_diag = img_diag.resize(
+            (img_diag.width * 2, img_diag.height * 2), Image.LANCZOS
+        )
         self.image_diag = ImageTk.PhotoImage(resized_diag)
         self.lbl_diag = Label(self.frm2, image=self.image_diag, bg="#F2F7F9", bd=0)
         self.lbl_diag.image = self.image_diag
@@ -148,7 +151,7 @@ class Page5AR:
         self.label_flch_srt.image = self.img_flch_srt
         self.label_flch_srt.place(x=2, y=652)
 
-        self.frm2.pack(expand=YES,  fill=BOTH)
+        self.frm2.pack(expand=YES, fill=BOTH)
 
         self.frm3 = Frame(self.master, bg="#1679EF", height=60)
         date = datetime.now()

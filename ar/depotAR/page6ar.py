@@ -7,6 +7,7 @@ import arabic_reshaper
 import bidi.algorithm
 from ar.depotAR.page7ar import Page7AR
 
+
 class Page6AR:
     def __init__(self, master, main_app, cursor, conn):
         self.master = master
@@ -109,7 +110,9 @@ class Page6AR:
         # rotated image
         image_old = Image.open("image/fleche10.png")
         image_rota = image_old.rotate(180)
-        self.image_final = ImageTk.PhotoImage(image_rota.resize((50, 50), Image.LANCZOS))
+        self.image_final = ImageTk.PhotoImage(
+            image_rota.resize((50, 50), Image.LANCZOS)
+        )
 
         # partie fleche gauche
         self.label_flch5 = Label(self.frm2, image=self.image_final, bg="#F2F7F9")
@@ -127,7 +130,7 @@ class Page6AR:
         # Charger les prix basés sur le casier
         self.load_prices()
 
-        self.frm2.pack(expand=YES, fill=BOTH)   
+        self.frm2.pack(expand=YES, fill=BOTH)
 
         # bande bleu BOTTOM
         self.frm3 = Frame(self.master, bg="#1679EF", height=60)

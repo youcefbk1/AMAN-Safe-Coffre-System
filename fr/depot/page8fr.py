@@ -109,7 +109,7 @@ class Page8FR:
         # Display values from the active user data
         label_date_value = CTkLabel(
             master=frm_info,
-            text=f"{datetime.now():%d-%m-%Y}  /  {datetime.now():%I:%M}",  
+            text=f"{datetime.now():%d-%m-%Y}  /  {datetime.now():%I:%M}",
             font=("Arial", 34, "bold"),
             fg_color="#F2F7F9",
             text_color="#1679EF",
@@ -199,7 +199,7 @@ class Page8FR:
         label2.pack(expand=YES)
 
         self.frm3.pack(fill=X, side=BOTTOM)
-        
+
     def get_active_user_data(self):
         """
         Fetches active user data from the 'person' table.
@@ -238,7 +238,7 @@ class Page8FR:
                 "casier": "Error",
                 "price": "Error",
             }
-            
+
     def get_ticket_number(self):
         """
         Fetches the ticket_number from database ticket table.
@@ -257,7 +257,6 @@ class Page8FR:
         except Exception as e:
             print(f"Error fetching ticket number: {e}")
             return "Error"
-
 
     def return_to_main(self):
         self.reset_timer()  # Reset the timer on interaction

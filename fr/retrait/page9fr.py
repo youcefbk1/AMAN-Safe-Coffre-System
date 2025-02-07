@@ -8,6 +8,7 @@ import locale
 import paramiko
 from fr.retrait.page10fr import Page10FR
 
+
 class Page9FR:
     def __init__(self, master, main_app, cursor, conn):
         self.master = master
@@ -180,6 +181,7 @@ class Page9FR:
         label2.pack(expand=YES)
 
         self.frm3.pack(fill=X, side=BOTTOM)
+
     def start_raspberry_script(self, username, password):
         """
         Reads the casier value from the 'person' table and starts the corresponding

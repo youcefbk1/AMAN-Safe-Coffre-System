@@ -23,10 +23,10 @@ class Page3FR:
     def open_touch_keyboard(self, event=None):
         # Open the touch keyboard on Windows from C:\Program Files\Common Files\microsoft shared\ink\TabTip.exe
 
-        os.system('"C:\\Program Files\\Common Files\\microsoft shared\\ink\\TabTip.exe"')
+        os.system(
+            '"C:\\Program Files\\Common Files\\microsoft shared\\ink\\TabTip.exe"'
+        )
         print("success keyboard")
-        
-    
 
     def setup_gui(self):
         locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
@@ -128,7 +128,7 @@ class Page3FR:
         label_flch2.image = img_flch2  # Keep a reference to the image object
         label_flch2.place(x=4, y=595)
 
-        image_identite = Image.open("fr/image/identite_fr.png")
+        image_identite = Image.open("image/identite_fr.png")
         resize_identite = image_identite.resize((500, 340), Image.LANCZOS)
         img_identite = ImageTk.PhotoImage(resize_identite)
         self.label_img = Label(self.frm2, image=img_identite, bg="#F2F7F9")

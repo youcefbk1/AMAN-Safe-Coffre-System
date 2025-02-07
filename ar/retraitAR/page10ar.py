@@ -4,6 +4,7 @@ from PIL import Image, ImageTk
 from datetime import datetime
 import locale
 
+
 class Page10AR:
     def __init__(self, master, main_app, cursor, conn):
         self.master = master

@@ -7,6 +7,7 @@ import locale
 import paramiko
 from ar.retraitAR.page10ar import Page10AR
 
+
 class Page9AR:
     def __init__(self, master, main_app, cursor, conn):
         self.master = master
@@ -231,7 +232,6 @@ class Page9AR:
         except Exception as e:
             print(f"Error starting Raspberry Pi script: {e}")
 
-
     def fetch_username(self):
         """
         Fetches the active username from the database where 'actif = 1'.
@@ -297,7 +297,10 @@ class Page9AR:
         try:
             self.cursor.execute("DELETE FROM person WHERE actif = 1")
             # Delete also from person where username = username and password = password
-            self.cursor.execute("DELETE FROM person WHERE username = ? AND password = ?", (self.active_username, self.entry_password.get().strip()))
+            self.cursor.execute(
+                "DELETE FROM person WHERE username = ? AND password = ?",
+                (self.active_username, self.entry_password.get().strip()),
+            )
             self.conn.commit()
             print("Utilisateur supprimé avec succès.")
         except Exception as e:
