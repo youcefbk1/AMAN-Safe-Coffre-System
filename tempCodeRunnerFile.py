@@ -1,1 +1,1 @@
-self.master.iconbitmap("image/AMAN-LOGO.ico")
+pady=30

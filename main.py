@@ -15,8 +15,8 @@ class MainApplication:
         self.master = master
         # # Enable full-screen mode and remove window decorations
         self.master.attributes("-fullscreen", True)  # Start in full-screen mode
-        self.master.resizable(False, False)  # Disable window resizing
-        self.master.config(bg="#F2F7F9")
+        # self.master.resizable(False, False)  # Disable window resizing
+        # self.master.config(bg="#F2F7F9")
 
         # Bind Escape key to exit full-screen mode
         self.master.bind("<Escape>", self.exit_fullscreen)

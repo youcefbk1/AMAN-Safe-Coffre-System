@@ -34,7 +34,7 @@ class Page9AR:
 
         # Top blue bar
         self.frm1 = Frame(self.master, bg="#1679EF", height=100)
-        self.frm1.pack(fill=X, side=TOP, pady=30)
+        self.frm1.pack(fill=X, side=TOP)
 
         # AMAN logo
         old_image_frm1 = Image.open("image/AMAN-BLEU.png")

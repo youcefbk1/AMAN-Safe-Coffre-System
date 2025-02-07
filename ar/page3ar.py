@@ -1,4 +1,3 @@
-import tkinter as tk
 from tkinter import *
 from customtkinter import CTkEntry, CTkButton
 from PIL import Image, ImageTk
@@ -20,11 +19,8 @@ class Page3AR:
         self.setup_gui()
         self.reset_timer()  # Start the inactivity timer
 
-        # Open the touch keyboard on Windows from C:\Program Files\Common Files\microsoft shared\ink\TabTip.exe
 
     def open_touch_keyboard(self, event=None):
-        # Open the touch keyboard on Windows from C:\Program Files\Common Files\microsoft shared\ink\TabTip.exe
-
         os.system(
             '"C:\\Program Files\\Common Files\\microsoft shared\\ink\\TabTip.exe"'
         )
@@ -40,23 +36,23 @@ class Page3AR:
         self.master.maxsize(1920, 1200)
         self.master.config(bg="#F2F7F9")
 
-        self.frm1 = tk.Frame(self.master, bg="#1679EF", height=100)
-        self.frm1.pack(fill=tk.X, side=tk.TOP)
+        self.frm1 = Frame(self.master, bg="#1679EF", height=100)
+        self.frm1.pack(fill=X, side=TOP)
 
         # Load and display logo image
         self.old_image_frm1 = Image.open("image/AMAN-BLEU.png")
         self.resized_frm1 = self.old_image_frm1.resize((120, 100), Image.LANCZOS)
         self.new_image_frm1 = ImageTk.PhotoImage(self.resized_frm1)
-        self.label1 = tk.Label(
+        self.label1 = Label(
             self.frm1, image=self.new_image_frm1, highlightthickness=0, bd=0
         )
         self.label1.image = self.new_image_frm1  # Keep a reference to the image object
-        self.label1.pack(expand=tk.YES)
+        self.label1.pack(expand=YES)
 
-        self.frm2 = tk.Frame(self.master, bg="#F2F7F9")
+        self.frm2 = Frame(self.master, bg="#F2F7F9")
 
         # Display message
-        self.label_msg = tk.Label(
+        self.label_msg = Label(
             self.frm2,
             text="الرجاء إدخال رقم بطاقة الهوية البيومترية الخاصة بك",
             font=("Arial", 36, "bold"),
@@ -123,7 +119,7 @@ class Page3AR:
         self.image_flch = Image.open("image/fleche3.png")
         self.resized_flesh = self.image_flch.resize((100, 100), Image.LANCZOS)
         self.img_flch = ImageTk.PhotoImage(self.resized_flesh)
-        self.label_flch = tk.Label(self.frm2, image=self.img_flch, bg="#F2F7F9")
+        self.label_flch = Label(self.frm2, image=self.img_flch, bg="#F2F7F9")
         self.label_flch.image = self.img_flch  # Keep a reference to the image object
         self.label_flch.place(x=1440, y=395)
 
@@ -131,7 +127,7 @@ class Page3AR:
         self.rotated_img = self.image_flch2.rotate(180)
         self.resize = self.rotated_img.resize((70, 70), Image.LANCZOS)
         self.img_flch2 = ImageTk.PhotoImage(self.resize)
-        self.label_flch2 = tk.Label(self.frm2, image=self.img_flch2, bg="#F2F7F9")
+        self.label_flch2 = Label(self.frm2, image=self.img_flch2, bg="#F2F7F9")
         self.label_flch2.image = self.img_flch2  # Keep a reference to the image object
         self.label_flch2.place(x=2, y=595)
 
@@ -139,23 +135,23 @@ class Page3AR:
         self.image_identite = Image.open("image/identite_ar.png")
         self.resize_identite = self.image_identite.resize((500, 340), Image.LANCZOS)
         self.img_identite = ImageTk.PhotoImage(self.resize_identite)
-        self.label_img = tk.Label(self.frm2, image=self.img_identite, bg="#F2F7F9")
+        self.label_img = Label(self.frm2, image=self.img_identite, bg="#F2F7F9")
         self.label_img.image = self.img_identite  # Keep a reference to the image object
         self.label_img.place(x=110, y=40)
 
-        self.frm2.pack(expand=tk.YES, fill=tk.BOTH)
+        self.frm2.pack(expand=YES, fill=BOTH)
 
-        self.frm3 = tk.Frame(self.master, bg="#1679EF", height=60)
+        self.frm3 = Frame(self.master, bg="#1679EF", height=60)
         self.date = datetime.now()
-        self.label2 = tk.Label(
+        self.label2 = Label(
             self.frm3,
             text=f"{self.date:%d-%m-%Y}  /  {self.date:%I:%M}",
             font=("Arial", 24),
             fg="#F2F7F9",
             bg="#1679EF",
         )
-        self.label2.pack(expand=tk.YES)
-        self.frm3.pack(fill=tk.X, side=tk.BOTTOM)
+        self.label2.pack(expand=YES)
+        self.frm3.pack(fill=X, side=BOTTOM)
 
     def validate_username(self, username):
         # Check if the username consists only of numbers and is exactly 9 digits long
@@ -255,6 +251,6 @@ class Page3AR:
 
 
 if __name__ == "__main__":
-    root = tk.Tk()
+    root = Tk()
     app = Page3AR(root)
     root.mainloop()

@@ -7,7 +7,6 @@ import random
 import string
 from fr.page4fr import Page4FR
 import os
-import sys
 
 
 class Page3FR:
@@ -21,8 +20,6 @@ class Page3FR:
         self.reset_timer()  # Start the inactivity timer
 
     def open_touch_keyboard(self, event=None):
-        # Open the touch keyboard on Windows from C:\Program Files\Common Files\microsoft shared\ink\TabTip.exe
-
         os.system(
             '"C:\\Program Files\\Common Files\\microsoft shared\\ink\\TabTip.exe"'
         )
@@ -32,7 +29,6 @@ class Page3FR:
         locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
 
         self.master.title("AMAN")
-
         self.master.iconbitmap("image/AMAN-LOGO.ico")
         self.master.geometry("1920x1200")
         self.master.minsize(1920, 1200)
@@ -113,14 +109,14 @@ class Page3FR:
         )
         self.btn_srt.place(x=90, y=600)
 
-        image_flch = Image.open("fleche3.png")
+        image_flch = Image.open("image/fleche3.png")
         self.resized_flesh = image_flch.resize((100, 100), Image.LANCZOS)
         img_flch = ImageTk.PhotoImage(self.resized_flesh)
         label_flch = Label(self.frm2, image=img_flch, bg="#F2F7F9")
         label_flch.image = img_flch  # Keep a reference to the image object
         label_flch.place(x=1430, y=400)
 
-        image_flch2 = Image.open("fleche3.png")
+        image_flch2 = Image.open("image/fleche3.png")
         rotated_img = image_flch2.rotate(180)
         resize = rotated_img.resize((70, 70), Image.LANCZOS)
         img_flch2 = ImageTk.PhotoImage(resize)

@@ -1,4 +1,5 @@
 # Python standard dependencies
+# to create a exe file tape pyinstaller --onedir  --icon gaga.ico --name gaga main.py 
 sqlite3
 paramiko
 Tkiner
@@ -6,4 +7,5 @@ custom_tkinter
 serial
 arabic-reshaper 
 python-bidi
-pip install pillow
+pillow
+pyinstaller
